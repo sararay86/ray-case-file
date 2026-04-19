@@ -1386,16 +1386,15 @@ function showEvTab(btn,id){
 function jumpTo(bodyId,markId){
   var body=document.getElementById(bodyId);
   var mark=document.getElementById(markId);
-  if(mark&&body){
-    // offsetTop relative to the scrollable container
-    body.scrollTop=mark.offsetTop-body.offsetTop-20;
-    mark.style.background='rgba(180,60,40,.5)';
-    mark.style.outline='2px solid rgba(220,100,60,.8)';
-    setTimeout(function(){
-      mark.style.background='';
-      mark.style.outline='';
-    },2500);
-  }
+  if(!mark||!body) return;
+  // Walk up the DOM to get offset relative to the scrollable body container
+  var offset=0, el=mark;
+  while(el && el!==body){ offset+=el.offsetTop; el=el.offsetParent; }
+  body.scrollTop=offset-40;
+  mark.style.background='rgba(180,60,40,.55)';
+  mark.style.outline='2px solid rgba(220,100,60,.9)';
+  mark.style.transition='background 0.3s,outline 0.3s';
+  setTimeout(function(){ mark.style.background=''; mark.style.outline=''; },3000);
 }
 </script>
 <script>
