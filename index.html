@@ -1387,9 +1387,14 @@ function jumpTo(bodyId,markId){
   var body=document.getElementById(bodyId);
   var mark=document.getElementById(markId);
   if(mark&&body){
-    body.scrollTop=mark.offsetTop-20;
-    mark.style.background='rgba(140,31,26,.4)';
-    setTimeout(function(){mark.style.background=''},2500);
+    // offsetTop relative to the scrollable container
+    body.scrollTop=mark.offsetTop-body.offsetTop-20;
+    mark.style.background='rgba(180,60,40,.5)';
+    mark.style.outline='2px solid rgba(220,100,60,.8)';
+    setTimeout(function(){
+      mark.style.background='';
+      mark.style.outline='';
+    },2500);
   }
 }
 </script>
