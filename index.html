@@ -1267,67 +1267,246 @@ function navTo(id){
 
 // -- TIMELINE DATA (from Ray-Case-Interactive.html) --
 const TL = [
-
-  {date:'Dec 15, 2023', tag:'m', tagLabel:'Municipal', dot:'navy', title:'Sara moves into Unit 1101. Mukamal in adjacent Unit 1103.', detail:'Sara transferred to Unit 1101 at The Duchess. Mukamal occupied Unit 1103, sharing a wall with Sara's master bedroom. The noise harassment begins almost immediately.'},
-
-  {date:'Dec 2023–Jan 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Noise campaign begins. Master bedroom unlivable.', detail:'Mukamal's sound system penetrates the shared wall with force. Closet hangers vibrate and clatter. Sara cannot sleep in the master bedroom once during her entire tenancy at Unit 1101. She reports the noise to management in writing repeatedly. [DUCHESS000080; DUCHESS Interrogatory Resp. pp. 7–8]'},
-
-  {date:'Feb 1, 2024', tag:'m', tagLabel:'Municipal', dot:'', title:'Gutierrez follow-up: situation has not improved.', detail:'Property manager Benedicta Gutierrez emails Sara to ask if the noise situation has improved. Sara confirms it has not.'},
-
-  {date:'Feb 22, 2024', tag:'m', tagLabel:'Municipal', dot:'', title:'Dytyniak escalates to SVP — two months after first complaint.', detail:'Building manager Andrew Dytyniak finally escalates to Yvette Stewart-Glimp (SVP Property Management) — more than two months after Sara's initial complaint. Nothing changes.'},
-
-  {date:'Early–Mid 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Harassment escalates: verbal threats, intimidating letters, spitting.', detail:'Mukamal makes verbal threats of physical harm to Sara and Manuel. Leaves intimidating written letters outside their unit. Spits on grocery deliveries. His own written admission: “I should not have spit at his door. I did not mean to spit on his groceries.” Dytyniak confirms on video: “When reviewing footage we can confirm he did spit on their items.” North Bergen Case 0908-S-2024-269. [DUCHESS000300–301; DUCHESS000315]'},
-
-  {date:'May 2, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal abuses building staff. Calls manager a “bitch” in front of a child.', detail:'Mukamal throws a lease violation letter onto the elevator floor and verbally abuses property manager Benedicta Gutierrez, calling her a “bitch” in front of a child. [DUCHESS000281–292]'},
-
-  {date:'April 2024', tag:'m', tagLabel:'Municipal', dot:'gold', title:'Notice to Cease issued to Mukamal — six months after first complaint.', detail:'Notice to Cease hand-delivered to Mukamal [DUCHESS000184, 000237]. This is the same Notice to Cease Mukamal later submitted as his “evidence” against Sara — he received it for his own conduct.'},
-
-  {date:'Jun 19, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal throws bag at property manager; registers harassment website.', detail:'Throws bag at Gutierrez; records her without consent [DUCHESS000255]. Registers domain “DuchessSucksAndrewandBenedicta” [DUCHESS000252]. Defendants' own attorney advised 3-day NTQ for terroristic threats was available — not pursued [DUCHESS000349].'},
-
-  {date:'Jul 3, 2024', tag:'e', tagLabel:'Key Evidence', dot:'gold', title:'Sara formally notifies building of intent to vacate. Break-lease fees waived.', detail:'Sara sends formal notice citing Mukamal's harassment and management's failure. SVP Yvette Stewart-Glimp responds: “We understand and we are so sorry. We are following the law and unfortunately it is taking time. You will not be charged any break lease fees.”'},
-
-  {date:'Late Jul–Aug 2024', tag:'m', tagLabel:'Municipal', dot:'', title:'Two Notices to Quit issued to Mukamal — after Sara already gave notice.', detail:'Defendants finally issue two Notices to Quit with August 31, 2024 deadline [DUCHESS000220]. Sara had already given notice to vacate.'},
-
-  {date:'Aug 12, 2024', tag:'m', tagLabel:'Municipal', dot:'navy', title:'Sara & Manuel move to Hoboken Point, Unit 701S.', detail:'Sara and Manuel move to 100 Harbor Blvd, Weehawken, NJ. They believe the conflict is over.'},
-
-  {date:'Aug 21–22, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal emails: “another project.”', detail:'“Now, my intention was to just move, and move on to another project once I was out of this garbage environment, but you seem to want to keep pushing me.” — Mukamal to Duchess manager, written while relocating to Sara's new building. [DUCHESS000332]'},
-
-  {date:'Aug 30, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal moves into Sara's new building. Unit 509N.', detail:'Eighteen days after Sara. Per his own sworn statement to Weehawken PD he claims he moved to “avoid further conflict.” Sara is in Unit 701S. [Investigation Report 24-31824A]'},
-
-  {date:'Sept 2, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Pool deck confrontation. Sara files police report same day at 5:16 PM.', detail:'Mukamal approaches Sara and Manuel on the patio. First words (before Sara records): “I found us and we get to be together again!” Calls Sara a “Karen.” Sara responds with a comment about his age. Sara and Manuel file police report FIRST — 5:16 PM (CAD 24-29264). Officer Echanique documents Mukamal's words; Sara described as “creeped out” and “frightened.”'},
-
-  {date:'Sept 21, 2024', tag:'m', tagLabel:'Municipal', dot:'red', title:'Mukamal files retaliatory criminal complaint. Nineteen days after the incident.', detail:'Mukamal goes to Weehawken PD at 16:01 hours. Eleven days after his own Notice to Cease from Hoboken Point/Greystar. In his account to Officer McCall, he attributes a fabricated quote to Manuel: “I am going to ruin you like we did in the last building.” This statement does not appear on the audio recording.'},
-
-  {date:'Feb 7, 2025', tag:'e', tagLabel:'Key Evidence', dot:'gold', title:'Mediation: Mukamal offers mutual dismissal.', detail:'Mukamal's counsel proposes: drop Weehawken charges against Sara/Manuel in exchange for Sara dropping North Bergen spitting complaint (0908-S-2024-269). Sara refuses. This reveals the complaint's true purpose — leverage to extinguish Mukamal's own criminal exposure.'},
-
-  {date:'Feb 26, 2025', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal perjures himself. Claims to be “out of country.”', detail:'Mukamal claims to be outside the country. Gym surveillance footage and key fob access records prove he was in the building. Court accepted his verbal claim with no documentation. Sara, by contrast, provided formal adjournment letters with hotel confirmation #17803024 — 25 days in advance.'},
-
-  {date:'Apr 16, 2025', tag:'m', tagLabel:'Municipal', dot:'', title:'Contempt proceeding initiated.', detail:'Contempt proceeding entered on court docket re: Mukamal's perjured Feb 26 statement. Rescheduled to Aug 20, 2025 alongside trial. Continued by court instruction. Judge Olivieri later denied on the record having any recollection of it.'},
-
-  {date:'Apr 18, 2025', tag:'p', tagLabel:'Protected Activity', dot:'green', title:'Sara petitions Mayor Turner.', detail:'Formal written petition to rturner@weehawken-nj.us. Sara requests oversight and inquiry. ~30-minute phone call follows (~Apr 22). Mayor states he agrees case has “dragged on for way too long,” will make inquiries, will speak to the prosecutor.'},
-
-  {date:'~Apr 22, 2025', tag:'e', tagLabel:'Key Evidence', dot:'gold', title:'Mayor Turner: case has “dragged on for way too long.”', detail:'Mayor Turner calls Sara. Sara documents in contemporaneous email to then-counsel Berrent: “He agrees that it has dragged on for way too long but is curious to know where they see this all going.”'},
-
-  {date:'Jun 4, 2025', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Trial date offered by defense rejected; calendar built around LoFaro.', detail:'Mott offered July 24, 25, 28. Judge: “That's fantastic. But I don't have court those days, so that's not happening.” Court built August 20 trial date around LoFaro's Camden County trial + family vacation. Aug 20 trial date silently evaporated — 7-month gap to next hearing.'},
-
-  {date:'Jun 5, 2025', tag:'m', tagLabel:'Municipal', dot:'green', title:'Sara files cross-complaint against Mukamal. 89 days before SOL.', detail:'Filed on court-ordered deadline. 89 days before the September 2, 2025 statute of limitations expiration. Docket 0911-S-2025-000092. Probable cause found November 25, 2025.'},
-
-  {date:'Dec 2, 2025', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Prosecutor confirms in writing: no video exists.', detail:'Phyllis Walsh, Weehawken Prosecutor's Discovery Coordinator: “Our office has not received any video recordings from Brian Mukamal.” The prosecution's chief claimed evidence does not exist. The prosecution continues.'},
-
-  {date:'Jan 21, 2026', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Hearing #14: Remote access denied to Sara; granted to LoFaro & Mukamal. Pro se right disparaged.', detail:'Sara called Jan 20 to request remote appearance — denied. LoFaro and Mukamal appeared virtually. Judge stated: “I would seriously consider hiring an attorney… that's why we go to school for law school for three years.” [Jan 21, 2026 transcript]'},
-
-  {date:'Jan 24, 2026', tag:'m', tagLabel:'Municipal', dot:'gold', title:'Speedy Trial Motion filed. OPIA complaint filed.', detail:'Motion to Dismiss for Speedy Trial Violation filed per N.J. Const. Art. I §10 and State v. Szima, 70 N.J. 196 (1976). OPIA complaint against Judge Olivieri filed same day.'},
-
-  {date:'Mar 2, 2026', tag:'m', tagLabel:'Municipal', dot:'', title:'LoFaro files motion to dismiss Sara's cross-complaint. Never serves Sara.', detail:'LoFaro submits motion to court, asks court to forward. Sara never receives it. Motion cites N.J.S.A. 2C:21-6 (credit card fraud statute) as the applicable limitations provision.'},
-
-  {date:'Mar 18, 2026', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Hearing #15: Unserved motion, silencing, prejudgment — all on the record.', detail:'Judge states she is “ready to go” on a motion Sara has never received. LoFaro: “I think it's clear what the ruling should be.” Judge: “Absolutely.” — after reviewing only LoFaro's papers. Judge refuses to rule on speedy trial motion until trial. Judge: “I mean, it's already been two years. What's another couple months?” Judge confirms LoFaro is prosecuting on the record.'},
-
-  {date:'Mar 21, 2026', tag:'m', tagLabel:'Municipal', dot:'gold', title:'ACJC complaint + supplement filed. Recusal motion filed via JEDS (EF-4042822).', detail:'ACJC complaint + supplement against Judge Olivieri filed. Recusal motion filed via JEDS, returnable April 22, 2026.'},
-
-  {date:'Apr 14–15, 2026', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Court denies Sara access to her own docket history. Audio records received.', detail:'Court Administrator Figaro denies Sara's MACS case activity log request — “not part of public record.” No legal basis provided. Sara appeals per R. 1:38-10(b). Audio recordings (CN 12605) received separately — in Sara's possession.'},
-
-  {date:'Apr 22, 2026', tag:'m', tagLabel:'Municipal', dot:'navy', title:'Hearing #16. Recusal motion returnable. No trial date ever set.', detail:'Recusal motion pending 32 days without ruling. Speedy trial motion still unruled. Opposition to LoFaro's motion filed. Preservation of Objections filed.'}
-
+  {
+    "date": "Dec 15, 2023",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "navy",
+    "title": "Sara moves into Unit 1101. Mukamal in adjacent Unit 1103.",
+    "detail": "Sara transferred to Unit 1101 at The Duchess. Mukamal occupied Unit 1103, sharing a wall with Sara's master bedroom. The noise harassment begins almost immediately."
+  },
+  {
+    "date": "Dec 2023–Jan 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Noise campaign begins. Master bedroom unlivable.",
+    "detail": "Mukamal's sound system penetrates the shared wall with force. Closet hangers vibrate and clatter. Sara cannot sleep in the master bedroom once during her entire tenancy at Unit 1101. She reports the noise to management in writing repeatedly. [DUCHESS000080; DUCHESS Interrogatory Resp. pp. 7–8]"
+  },
+  {
+    "date": "Feb 1, 2024",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "",
+    "title": "Gutierrez follow-up: situation has not improved.",
+    "detail": "Property manager Benedicta Gutierrez emails Sara to ask if the noise situation has improved. Sara confirms it has not."
+  },
+  {
+    "date": "Feb 22, 2024",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "",
+    "title": "Dytyniak escalates to SVP — two months after first complaint.",
+    "detail": "Building manager Andrew Dytyniak finally escalates to Yvette Stewart-Glimp (SVP Property Management) — more than two months after Sara's initial complaint. Nothing changes."
+  },
+  {
+    "date": "Early–Mid 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Harassment escalates: verbal threats, intimidating letters, spitting.",
+    "detail": "Mukamal makes verbal threats of physical harm to Sara and Manuel. Leaves intimidating written letters outside their unit. Spits on grocery deliveries. His own written admission: “I should not have spit at his door. I did not mean to spit on his groceries.” Dytyniak confirms on video: “When reviewing footage we can confirm he did spit on their items.” North Bergen Case 0908-S-2024-269. [DUCHESS000300–301; DUCHESS000315]"
+  },
+  {
+    "date": "May 2, 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Mukamal abuses building staff. Calls manager a “bitch” in front of a child.",
+    "detail": "Mukamal throws a lease violation letter onto the elevator floor and verbally abuses property manager Benedicta Gutierrez, calling her a “bitch” in front of a child. [DUCHESS000281–292]"
+  },
+  {
+    "date": "April 2024",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "gold",
+    "title": "Notice to Cease issued to Mukamal — six months after first complaint.",
+    "detail": "Notice to Cease hand-delivered to Mukamal [DUCHESS000184, 000237]. This is the same Notice to Cease Mukamal later submitted as his “evidence” against Sara — he received it for his own conduct."
+  },
+  {
+    "date": "Jun 19, 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Mukamal throws bag at property manager; registers harassment website.",
+    "detail": "Throws bag at Gutierrez; records her without consent [DUCHESS000255]. Registers domain “DuchessSucksAndrewandBenedicta” [DUCHESS000252]. Defendants"
+  },
+  {
+    "date": "Jul 3, 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "gold",
+    "title": "Sara formally notifies building of intent to vacate. Break-lease fees waived.",
+    "detail": "Sara sends formal notice citing Mukamal's harassment and management's failure. SVP Yvette Stewart-Glimp responds: “We understand and we are so sorry. We are following the law and unfortunately it is taking time. You will not be charged any break lease fees.”"
+  },
+  {
+    "date": "Late Jul–Aug 2024",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "",
+    "title": "Two Notices to Quit issued to Mukamal — after Sara already gave notice.",
+    "detail": "Defendants finally issue two Notices to Quit with August 31, 2024 deadline [DUCHESS000220]. Sara had already given notice to vacate."
+  },
+  {
+    "date": "Aug 12, 2024",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "navy",
+    "title": "Sara & Manuel move to Hoboken Point, Unit 701S.",
+    "detail": "Sara and Manuel move to 100 Harbor Blvd, Weehawken, NJ. They believe the conflict is over."
+  },
+  {
+    "date": "Aug 21–22, 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Mukamal emails: “another project.”",
+    "detail": "“Now, my intention was to just move, and move on to another project once I was out of this garbage environment, but you seem to want to keep pushing me.” — Mukamal to Duchess manager, written while relocating to Sara's new building. [DUCHESS000332]"
+  },
+  {
+    "date": "Aug 30, 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Mukamal moves into Sara's new building. Unit 509N.",
+    "detail": "Eighteen days after Sara. Per his own sworn statement to Weehawken PD he claims he moved to “avoid further conflict.” Sara is in Unit 701S. [Investigation Report 24-31824A]"
+  },
+  {
+    "date": "Sept 2, 2024",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Pool deck confrontation. Sara files police report same day at 5:16 PM.",
+    "detail": "Mukamal approaches Sara and Manuel on the patio. First words (before Sara records): “I found us and we get to be together again!” Calls Sara a “Karen.” Sara responds with a comment about his age. Sara and Manuel file police report FIRST — 5:16 PM (CAD 24-29264). Officer Echanique documents Mukamal's words; Sara described as “creeped out” and “frightened.”"
+  },
+  {
+    "date": "Sept 21, 2024",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "red",
+    "title": "Mukamal files retaliatory criminal complaint. Nineteen days after the incident.",
+    "detail": "Mukamal goes to Weehawken PD at 16:01 hours. Eleven days after his own Notice to Cease from Hoboken Point/Greystar. In his account to Officer McCall, he attributes a fabricated quote to Manuel: “I am going to ruin you like we did in the last building.” This statement does not appear on the audio recording."
+  },
+  {
+    "date": "Feb 7, 2025",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "gold",
+    "title": "Mediation: Mukamal offers mutual dismissal.",
+    "detail": "Mukamal's counsel proposes: drop Weehawken charges against Sara/Manuel in exchange for Sara dropping North Bergen spitting complaint (0908-S-2024-269). Sara refuses. This reveals the complaint's true purpose — leverage to extinguish Mukamal's own criminal exposure."
+  },
+  {
+    "date": "Feb 26, 2025",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Mukamal perjures himself. Claims to be “out of country.”",
+    "detail": "Mukamal claims to be outside the country. Gym surveillance footage and key fob access records prove he was in the building. Court accepted his verbal claim with no documentation. Sara, by contrast, provided formal adjournment letters with hotel confirmation #17803024 — 25 days in advance."
+  },
+  {
+    "date": "Apr 16, 2025",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "",
+    "title": "Contempt proceeding initiated.",
+    "detail": "Contempt proceeding entered on court docket re: Mukamal's perjured Feb 26 statement. Rescheduled to Aug 20, 2025 alongside trial. Continued by court instruction. Judge Olivieri later denied on the record having any recollection of it."
+  },
+  {
+    "date": "Apr 18, 2025",
+    "tag": "p",
+    "tagLabel": "Protected Activity",
+    "dot": "green",
+    "title": "Sara petitions Mayor Turner.",
+    "detail": "Formal written petition to rturner@weehawken-nj.us. Sara requests oversight and inquiry. ~30-minute phone call follows (~Apr 22). Mayor states he agrees case has “dragged on for way too long,” will make inquiries, will speak to the prosecutor."
+  },
+  {
+    "date": "~Apr 22, 2025",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "gold",
+    "title": "Mayor Turner: case has “dragged on for way too long.”",
+    "detail": "Mayor Turner calls Sara. Sara documents in contemporaneous email to then-counsel Berrent: “He agrees that it has dragged on for way too long but is curious to know where they see this all going.”"
+  },
+  {
+    "date": "Jun 4, 2025",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Trial date offered by defense rejected; calendar built around LoFaro.",
+    "detail": "Mott offered July 24, 25, 28. Judge: “That's fantastic. But I don't have court those days, so that's not happening.” Court built August 20 trial date around LoFaro's Camden County trial + family vacation. Aug 20 trial date silently evaporated — 7-month gap to next hearing."
+  },
+  {
+    "date": "Jun 5, 2025",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "green",
+    "title": "Sara files cross-complaint against Mukamal. 89 days before SOL.",
+    "detail": "Filed on court-ordered deadline. 89 days before the September 2, 2025 statute of limitations expiration. Docket 0911-S-2025-000092. Probable cause found November 25, 2025."
+  },
+  {
+    "date": "Dec 2, 2025",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Prosecutor confirms in writing: no video exists.",
+    "detail": "Phyllis Walsh, Weehawken Prosecutor's Discovery Coordinator: “Our office has not received any video recordings from Brian Mukamal.” The prosecution's chief claimed evidence does not exist. The prosecution continues."
+  },
+  {
+    "date": "Jan 21, 2026",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Hearing #14: Remote access denied to Sara; granted to LoFaro & Mukamal. Pro se right disparaged.",
+    "detail": "Sara called Jan 20 to request remote appearance — denied. LoFaro and Mukamal appeared virtually. Judge stated: “I would seriously consider hiring an attorney… that's why we go to school for law school for three years.” [Jan 21, 2026 transcript]"
+  },
+  {
+    "date": "Jan 24, 2026",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "gold",
+    "title": "Speedy Trial Motion filed. OPIA complaint filed.",
+    "detail": "Motion to Dismiss for Speedy Trial Violation filed per N.J. Const. Art. I §10 and State v. Szima, 70 N.J. 196 (1976). OPIA complaint against Judge Olivieri filed same day."
+  },
+  {
+    "date": "Mar 2, 2026",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "",
+    "title": "LoFaro files motion to dismiss Sara's cross-complaint. Never serves Sara.",
+    "detail": "LoFaro submits motion to court, asks court to forward. Sara never receives it. Motion cites N.J.S.A. 2C:21-6 (credit card fraud statute) as the applicable limitations provision."
+  },
+  {
+    "date": "Mar 18, 2026",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Hearing #15: Unserved motion, silencing, prejudgment — all on the record.",
+    "detail": "Judge states she is “ready to go” on a motion Sara has never received. LoFaro: “I think it's clear what the ruling should be.” Judge: “Absolutely.” — after reviewing only LoFaro's papers. Judge refuses to rule on speedy trial motion until trial. Judge: “I mean, it's already been two years. What's another couple months?” Judge confirms LoFaro is prosecuting on the record."
+  },
+  {
+    "date": "Mar 21, 2026",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "gold",
+    "title": "ACJC complaint + supplement filed. Recusal motion filed via JEDS (EF-4042822).",
+    "detail": "ACJC complaint + supplement against Judge Olivieri filed. Recusal motion filed via JEDS, returnable April 22, 2026."
+  },
+  {
+    "date": "Apr 14–15, 2026",
+    "tag": "e",
+    "tagLabel": "Key Evidence",
+    "dot": "red",
+    "title": "Court denies Sara access to her own docket history. Audio records received.",
+    "detail": "Court Administrator Figaro denies Sara's MACS case activity log request — “not part of public record.” No legal basis provided. Sara appeals per R. 1:38-10(b). Audio recordings (CN 12605) received separately — in Sara's possession."
+  },
+  {
+    "date": "Apr 22, 2026",
+    "tag": "m",
+    "tagLabel": "Municipal",
+    "dot": "navy",
+    "title": "Hearing #16. Recusal motion returnable. No trial date ever set.",
+    "detail": "Recusal motion pending 32 days without ruling. Speedy trial motion still unruled. Opposition to LoFaro's motion filed. Preservation of Objections filed."
+  }
 ];
 
 function buildTimeline() {
