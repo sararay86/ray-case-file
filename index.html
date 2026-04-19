@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State v. Ray & Caram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F8F6F1;
+  --white:#FFFFFF;
+  --ink:#0F0E0C;
+  --ink2:#1E1C18;
+  --red:#8C1F1A;
+  --red-lt:#F5EEEC;
+  --gold:#A07820;
+  --rule:#D4CFC4;
+  --muted:#7A766C;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --serif:'Playfair Display',Georgia,serif;
+  --mono:'DM Mono','IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--sans);color:var(--ink);background:var(--cream);overflow-x:hidden;line-height:1.65}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:0 48px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .3s,box-shadow .3s;
+}
+#nav.scrolled{background:rgba(248,246,241,.96);backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--rule)}
+.nav-logo{
+  font-family:var(--mono);font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);
+}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-link{
+  font-size:12px;font-weight:500;letter-spacing:.5px;
+  color:var(--muted);text-decoration:none;cursor:pointer;
+  transition:color .2s;
+}
+.nav-link:hover{color:var(--ink)}
+.nav-cta{
+  background:var(--ink);color:var(--cream);
+  padding:8px 20px;border-radius:2px;
+  font-size:12px;font-weight:600;letter-spacing:.5px;
+  text-decoration:none;transition:background .2s;
+}
+.nav-cta:hover{background:var(--red)}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 72px 80px;
+  position:relative;
+  background:var(--ink2);
+  overflow:hidden;
+}
+.hero-bg-lines{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    90deg,
+    transparent,transparent 120px,
+    rgba(255,255,255,.015) 120px,rgba(255,255,255,.015) 121px
+  );
+}
+.hero-overline{
+  font-family:var(--mono);font-size:11px;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(255,255,255,.35);
+  margin-bottom:32px;
+}
+.hero-headline{
+  font-family:var(--serif);
+  font-size:clamp(48px,7vw,100px);
+  font-weight:900;
+  color:#fff;
+  line-height:1.0;
+  max-width:860px;
+  margin-bottom:40px;
+  letter-spacing:-1px;
+}
+.hero-headline em{font-style:italic;color:rgba(255,255,255,.55)}
+.hero-deck{
+  font-size:17px;color:rgba(255,255,255,.5);
+  max-width:560px;line-height:1.7;margin-bottom:56px;
+  font-weight:300;
+}
+.hero-stats{
+  display:flex;gap:0;
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-top:32px;
+  max-width:700px;
+}
+.h-stat{
+  flex:1;padding-right:40px;
+  border-right:1px solid rgba(255,255,255,.1);
+  margin-right:40px;
+}
+.h-stat:last-child{border-right:none;margin-right:0;padding-right:0}
+.h-stat-n{
+  font-family:var(--serif);font-size:48px;font-weight:900;
+  color:#fff;line-height:1;margin-bottom:6px;
+}
+.h-stat-n.red{color:#E07070}
+.h-stat-l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);font-family:var(--mono)}
+.hero-scroll{
+  position:absolute;bottom:32px;right:72px;
+  font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,.25);
+  display:flex;align-items:center;gap:8px;
+}
+.hero-scroll::after{
+  content:'';width:40px;height:1px;background:rgba(255,255,255,.2);
+}
+
+/* ── PULL QUOTE ── */
+.pull-quote-section{
+  padding:100px 72px;
+  background:var(--red);
+  display:flex;align-items:center;gap:64px;
+}
+.pq-rule{width:3px;height:80px;background:rgba(255,255,255,.3);flex-shrink:0}
+.pq-text{
+  font-family:var(--serif);font-size:clamp(22px,3vw,36px);
+  font-style:italic;color:#fff;line-height:1.35;max-width:800px;
+  font-weight:400;
+}
+.pq-cite{
+  font-family:var(--mono);font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(255,255,255,.5);
+  margin-top:20px;display:block;
+}
+
+/* ── SECTION WRAPPER ── */
+.s-wrap{padding:100px 72px;max-width:1200px;margin:0 auto}
+.s-wrap.dark{background:var(--ink2);max-width:none;padding:100px 72px}
+.s-wrap.white{background:var(--white);max-width:none;padding:100px 72px}
+.s-inner{max-width:1100px;margin:0 auto}
+
+/* ── SECTION LABEL ── */
+.s-label{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:48px;
+}
+.s-label-num{
+  font-family:var(--mono);font-size:11px;
+  color:var(--muted);letter-spacing:2px;
+}
+.s-label-rule{flex:1;height:1px;background:var(--rule)}
+.s-label-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);
+}
+
+/* ── HEADLINES ── */
+.display-title{
+  font-family:var(--serif);
+  font-size:clamp(32px,4vw,56px);
+  font-weight:700;line-height:1.1;
+  color:var(--ink);margin-bottom:24px;
+  letter-spacing:-.5px;
+}
+.display-title.light{color:#fff}
+.lead{
+  font-size:18px;color:var(--muted);
+  line-height:1.7;max-width:640px;margin-bottom:48px;
+  font-weight:300;
+}
+
+h2{
+  font-family:var(--serif);font-size:22px;font-weight:700;
+  color:var(--ink);margin:48px 0 16px;
+  padding-bottom:12px;border-bottom:1px solid var(--rule);
+}
+h3{
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);margin:24px 0 8px;
+}
+p{margin-bottom:16px;line-height:1.75;font-size:16px}
+ul,ol{margin:12px 0 20px 24px}
+li{margin-bottom:8px;line-height:1.65;font-size:16px}
+strong{font-weight:600}
+.ev{font-family:var(--mono);font-size:12px;background:#EEEAE0;border:1px solid #D4CFC4;padding:1px 7px;border-radius:2px;color:var(--muted);margin:0 2px}
+
+/* ── STATS GRID ── */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+  background:var(--rule);border:1px solid var(--rule);
+  margin:48px 0;
+}
+.sg-cell{
+  background:var(--white);padding:32px 24px;text-align:center;
+}
+.sg-n{
+  font-family:var(--serif);font-size:40px;font-weight:900;
+  color:var(--ink);line-height:1;margin-bottom:8px;
+}
+.sg-n.red{color:var(--red)}.sg-n.gold{color:var(--gold)}
+.sg-l{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+
+/* ── TWO-COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.two-col.wide{grid-template-columns:3fr 2fr}
+
+/* ── FACT CARDS ── */
+.fact-cards{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--rule);border:1px solid var(--rule)}
+.fact-card{background:var(--cream);padding:32px 28px}
+.fact-card-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.fact-card-title{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.3}
+.fact-card-body{font-size:14px;color:var(--muted);line-height:1.65}
+
+/* ── CALLOUT ── */
+.callout{
+  border-left:3px solid var(--ink);
+  padding:20px 28px;margin:32px 0;
+  background:var(--white);
+}
+.callout.red{border-color:var(--red);background:var(--red-lt)}
+.callout.gold{border-color:var(--gold);background:#FAF5E8}
+.callout.green{border-color:#2A6B40;background:#EEF7F2}
+.callout-lbl{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.callout.red .callout-lbl{color:var(--red)}
+.callout.gold .callout-lbl{color:var(--gold)}
+blockquote{
+  margin:32px 0;padding:24px 32px;
+  border-left:3px solid var(--rule);
+  background:var(--white);
+}
+blockquote em{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--ink);line-height:1.6}
+blockquote cite{display:block;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;font-style:normal;letter-spacing:.5px}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px}
+th{background:var(--ink);color:var(--cream);padding:10px 14px;text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500}
+td{padding:12px 14px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.55}
+tr:nth-child(even) td{background:rgba(0,0,0,.02)}
+
+/* ── ACCORDION ── */
+.accord{border-top:1px solid var(--rule)}
+.accord-item{border-bottom:1px solid var(--rule)}
+.accord-hdr{
+  display:flex;align-items:center;gap:16px;padding:20px 0;
+  cursor:pointer;user-select:none;
+  transition:opacity .15s;
+}
+.accord-hdr:hover{opacity:.75}
+.accord-num{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  min-width:28px;
+}
+.accord-title{flex:1;font-size:16px;font-weight:500;color:var(--ink)}
+.accord-ico{
+  font-family:var(--mono);font-size:18px;color:var(--muted);
+  transition:transform .25s;line-height:1;
+}
+.accord-item.open .accord-ico{transform:rotate(45deg)}
+.accord-body{
+  display:none;padding:0 0 24px 44px;
+  font-size:15px;line-height:1.75;color:var(--muted);
+}
+.accord-item.open .accord-body{display:block}
+
+/* ── PERSON GRID ── */
+.person-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule);margin:32px 0}
+.person-card{background:var(--white);padding:28px 24px;transition:background .15s}
+.person-card:hover{background:var(--cream)}
+.person-name{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.person-role{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.person-note{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── TRANSCRIPT ── */
+.transcript{
+  background:var(--ink);border-radius:4px;overflow:hidden;margin:32px 0;
+}
+.t-top{background:#1A1814;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.t-top-title{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.6);letter-spacing:.5px}
+.t-legend{display:flex;gap:16px;flex-wrap:wrap}
+.t-leg{font-family:var(--mono);font-size:10px;display:flex;align-items:center;gap:5px;color:rgba(255,255,255,.4)}
+.t-leg-dot{width:8px;height:8px;border-radius:50%}
+.t-jumps{padding:10px 20px;background:#1A1814;border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:8px;flex-wrap:wrap}
+.t-jump{background:#272420;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:5px 12px;font-size:11px;font-family:var(--mono);cursor:pointer;border-radius:2px;transition:.15s}
+.t-jump:hover{background:rgba(140,31,26,.3);color:#E09090;border-color:rgba(140,31,26,.4)}
+.t-body{padding:16px 20px;overflow-y:auto;max-height:480px;font-family:var(--mono);font-size:12px;line-height:2}
+.t-body::-webkit-scrollbar{width:4px}.t-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.t-line{padding:1px 0}.t-ts{color:#3A4040;font-size:10px;margin-right:10px}
+.spk-j{color:#5B9BD5}.spk-s{color:#60C878}.spk-l{color:#D4A840}.spk-m{color:#C090D0}.spk-o{color:#7090A8}
+.t-line.hl{background:rgba(140,31,26,.2);border-left:2px solid var(--red);padding-left:8px;border-radius:0 2px 2px 0;margin:2px 0}
+
+/* ── EVIDENCE TABS ── */
+.ev-tabs{display:flex;border-bottom:2px solid var(--rule);margin-bottom:24px;gap:0}
+.ev-tab{padding:10px 24px;font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s;font-weight:500}
+.ev-tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+.ev-panel{display:none}.ev-panel.active{display:block}
+.ev-row{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:16px 0;border-bottom:1px solid var(--rule);gap:24px;
+}
+.ev-row-title{font-size:15px;font-weight:500;color:var(--ink);flex:1}
+.badge{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;font-weight:500}
+.b-g{background:#E8F5EE;color:#1A5A30;border:1px solid #A0D4B4}
+.b-r{background:#F5E8E8;color:#8C1F1A;border:1px solid #D4A0A0}
+.b-gold{background:#F5F0E0;color:#7A5A00;border:1px solid #D4C070}
+.b-bl{background:#E8EEF5;color:#1A3570;border:1px solid #A0B4D4}
+.b-gr{background:#EEEEEC;color:#555;border:1px solid #C4C4C0}
+
+/* ── CLAIM CARDS ── */
+.claim-cards{display:grid;gap:2px;background:var(--rule);border:1px solid var(--rule);margin:32px 0}
+.claim-card{background:var(--white);padding:28px 28px}
+.claim-num{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.claim-title{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.3}
+.claim-body{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ── CTA ── */
+.cta-section{
+  padding:100px 72px;
+  background:var(--ink);
+  display:flex;align-items:center;justify-content:space-between;gap:48px;
+  flex-wrap:wrap;
+}
+.cta-headline{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);color:#fff;font-weight:700;max-width:560px;line-height:1.2}
+.cta-buttons{display:flex;gap:12px;flex-wrap:wrap}
+.cta-btn{
+  padding:14px 28px;border-radius:2px;
+  font-family:var(--sans);font-size:14px;font-weight:600;
+  text-decoration:none;transition:.2s;display:inline-block;
+}
+.cta-btn.primary{background:var(--cream);color:var(--ink)}
+.cta-btn.primary:hover{background:#fff}
+.cta-btn.secondary{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.25)}
+.cta-btn.secondary:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+
+/* ── FOOTER ── */
+footer{
+  padding:40px 72px;
+  border-top:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;background:var(--cream);
+}
+.foot-l{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted)}
+.foot-r{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-align:right}
+
+/* ── SECTION DIVIDERS ── */
+.red-bar{height:3px;background:var(--red);width:48px;margin-bottom:24px}
+
+/* ── SEARCH ── */
+.search-hl{background:#FFF59D;border-radius:2px;padding:0 2px}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  #nav{padding:0 24px}
+  .nav-links{display:none}
+  #hero{padding:0 24px 64px}
+  .hero-headline{font-size:clamp(36px,8vw,64px)}
+  .hero-stats{flex-wrap:wrap}
+  .h-stat{min-width:50%;margin-bottom:24px}
+  .pull-quote-section,.s-wrap,.s-wrap.dark,.s-wrap.white,.cta-section{padding:64px 24px}
+  .two-col,.two-col.wide,.fact-cards,.person-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  footer{padding:32px 24px}
+}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding:10px 0;margin:24px 0}
+.timeline::before{content:'';position:absolute;left:108px;top:0;bottom:0;width:1px;background:var(--rule)}
+.tl-entry{display:flex;margin-bottom:2px;position:relative}
+.tl-date{min-width:100px;text-align:right;padding-right:20px;padding-top:14px;font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.3;flex-shrink:0;letter-spacing:.3px}
+.tl-dot{position:absolute;left:101px;top:17px;width:14px;height:14px;border-radius:50%;background:var(--cream);border:2px solid var(--rule);z-index:1;transition:.2s}
+.tl-dot.red{border-color:var(--red);background:var(--red-lt)}
+.tl-dot.gold{border-color:var(--gold);background:#FAF5E8}
+.tl-dot.green{border-color:#2A6B40;background:#EEF7F2}
+.tl-dot.navy{border-color:var(--ink);background:var(--ink)}
+.tl-content{margin-left:36px;padding:6px 0 6px;flex:1}
+.tl-card{background:var(--white);border:1px solid var(--rule);padding:12px 16px;transition:.2s;cursor:pointer}
+.tl-card:hover{border-color:var(--ink);box-shadow:0 2px 8px rgba(15,14,12,.06)}
+.tl-card.expanded{border-color:var(--ink)}
+.tl-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;font-family:var(--mono)}
+.tag-m{background:var(--red-lt);color:var(--red)}
+.tag-e{background:rgba(15,14,12,.07);color:var(--ink)}
+.tag-p{background:#EEF7F2;color:#2A6B40}
+.tl-title{font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4}
+.tl-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);font-size:13px;line-height:1.7;color:var(--muted)}
+.tl-detail.show{display:block}
+.tl-arrow{float:right;color:var(--muted);font-size:14px;transition:.3s;font-family:var(--mono);margin-left:8px}
+.tl-card.expanded .tl-arrow{transform:rotate(180deg)}
+.tl-link-inline{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink);cursor:pointer;border-bottom:1px solid var(--rule);padding-bottom:1px;transition:.15s;background:none;border-left:none;border-right:none;border-top:none;display:inline}
+.tl-link-inline:hover{color:var(--red);border-color:var(--red)}
+
+
+/* == STATIC TIMELINE == */
+.tl-static-wrap{position:relative;padding:0;margin:24px 0}
+.tl-static-wrap::before{content:'';position:absolute;left:140px;top:0;bottom:0;width:1px;background:var(--rule)}
+.tl-entry-static{display:flex;margin-bottom:2px;align-items:flex-start}
+.tl-date-static{width:140px;min-width:140px;flex-shrink:0;text-align:right;padding-right:16px;padding-top:15px;font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.3;letter-spacing:.3px}
+.tl-body-static{flex:1;padding:6px 0;position:relative;padding-left:20px}
+.tl-dot-static{position:absolute;left:-6px;top:14px;width:12px;height:12px;border-radius:50%;z-index:1}
+.tl-card-static{background:var(--white);border:1px solid var(--rule);padding:12px 16px;cursor:pointer;transition:border-color .15s}
+.tl-card-static:hover{border-color:var(--ink)}
+.tl-arr-static{float:right;font-family:var(--mono);font-size:14px;color:var(--muted);margin-left:8px;transition:transform .2s;display:inline-block}
+.tl-card-static.tl-open .tl-arr-static{transform:rotate(45deg)}
+.tl-detail-static{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);font-size:13px;line-height:1.7;color:var(--muted)}
+.tl-card-static.tl-open .tl-detail-static{display:block}
+
+</style>
+<script>
+function navTo(id){
+  var el=document.getElementById(id);
+  if(!el){return;}
+  var offset=el.getBoundingClientRect().top+window.pageYOffset-64;
+  window.scrollTo({top:offset,behavior:'smooth'});
+}
+</script>
+<script>
+(function(){
+  var PASS = '701S';
+  var stored = sessionStorage.getItem('ray_case_auth');
+  if(stored === PASS) return;
+  // Build gate overlay
+  var overlay = document.createElement('div');
+  overlay.id = 'auth-gate';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#1E1C18;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif';
+  overlay.innerHTML = `
+    <div style="text-align:center;max-width:360px;padding:48px 40px;background:#141310;border:1px solid #2A2720">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:32px">State v. Ray &amp; Caram &nbsp;&middot;&nbsp; Confidential Case File</div>
+      <div style="font-size:28px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Georgia,serif;line-height:1.2">Access Restricted</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.35);margin-bottom:36px;line-height:1.6">This document is confidential and intended for authorized recipients only.</div>
+      <input id="gate-input" type="password" placeholder="Enter access code"
+        style="width:100%;padding:12px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:15px;border-radius:2px;outline:none;margin-bottom:12px;box-sizing:border-box;font-family:system-ui,sans-serif;letter-spacing:3px;text-align:center"
+        onkeydown="if(event.key==='Enter')checkPass()"
+      />
+      <div id="gate-err" style="color:#E07070;font-size:12px;margin-bottom:12px;min-height:18px;font-family:'DM Mono',monospace;letter-spacing:1px"></div>
+      <button onclick="checkPass()" style="width:100%;padding:13px;background:#F8F6F1;color:#0F0E0C;border:none;font-size:13px;font-weight:700;cursor:pointer;border-radius:2px;letter-spacing:.5px;font-family:system-ui,sans-serif">Enter</button>
+      <div style="margin-top:24px;font-size:11px;color:rgba(255,255,255,.2);font-family:'DM Mono',monospace;letter-spacing:1px">Sara Ray, Pro Se &nbsp;&middot;&nbsp; sr3768@columbia.edu</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('gate-input').focus();
+})();
+
+function checkPass(){
+  var val = document.getElementById('gate-input').value;
+  if(val === '701S'){
+    sessionStorage.setItem('ray_case_auth','701S');
+    document.getElementById('auth-gate').remove();
+  } else {
+    document.getElementById('gate-err').textContent = 'Incorrect access code.';
+    document.getElementById('gate-input').value = '';
+    document.getElementById('gate-input').focus();
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">State v. Ray &amp; Caram</div>
+  <div class="nav-links">
+    <span class="nav-link" onclick="navTo('s-timeline')">Timeline</span>
+    <span class="nav-link" onclick="navTo('s-facts')">The Facts</span>
+    <span class="nav-link" onclick="navTo('s-conduct')">Misconduct</span>
+    <span class="nav-link" onclick="navTo('s-transcripts')">Transcripts</span>
+    <span class="nav-link" onclick="navTo('s-claims')">Evidence &amp; Claims</span>
+    <a href="mailto:sr3768@columbia.edu?subject=State v. Ray — Consultation" class="nav-cta">Contact Sara Ray</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-lines"></div>
+  <div class="hero-overline">Attorney Case Presentation &nbsp;·&nbsp; State v. Ray &amp; Caram &nbsp;·&nbsp; Docket 0911-S-2024-193/194</div>
+  <div class="hero-headline">The charges carry<br>a <em>$500 maximum</em><br>fine. It's been<br><span id="hero-days" style="color:#E07070">574</span> days.</div>
+  <div class="hero-deck">A petty disorderly persons offense. No trial date ever set. No video ever produced. A complainant whose sworn alibi was disproven by gym footage. A judge who said so herself — on the record.</div>
+  <div class="hero-stats">
+    <div class="h-stat">
+      <div class="h-stat-n red" id="stat-days">574+</div>
+      <div class="h-stat-l">Days Elapsed</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n">16</div>
+      <div class="h-stat-l">Appearances</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n red">$500</div>
+      <div class="h-stat-l">Max Fine if Convicted</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n red">$40K+</div>
+      <div class="h-stat-l">Legal Fees Spent</div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll to review</div>
+</section>
+
+<!-- PULL QUOTE -->
+<div class="pull-quote-section">
+  <div class="pq-rule"></div>
+  <div>
+    <div class="pq-text">"I mean, it's already been two years. What's another couple months?"</div>
+    <span class="pq-cite">— Hon. Lauren R. Olivieri, Weehawken Municipal Court, March 18, 2026 · Transcript [22:15–22:18]</span>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="s-wrap white">
+<div class="s-inner">
+  <div class="s-label"><span class="s-label-num">01</span><span class="s-label-rule"></span><span class="s-label-title">Executive Summary</span></div>
+  <div class="two-col wide">
+    <div>
+      <div class="display-title">The case that should not exist.</div>
+      <p>Sara Ray — federal security clearance holder, former McKinsey consultant, pro se defendant since August 2025 — has been under criminal prosecution in Weehawken Municipal Court for a petty disorderly persons offense for over 550 days. The maximum possible penalty is a $500 fine. Sixteen hearings have come and gone. No trial date has ever been set.</p>
+      <p>The complainant claimed to have video evidence. The prosecutor confirmed in writing that no such video exists. The complainant claimed to be out of the country on a key court date. Gym footage and key fob records place him in the building that day. The judge acknowledged the delay on the record and expressed indifference.</p>
+      <div class="callout red"><div class="callout-lbl">The Charges</div>Disorderly Conduct (N.J.S.A. 2C:33-2) and Harassment (N.J.S.A. 2C:33-4). <strong>Maximum penalty: $500 fine.</strong></div>
+    </div>
+    <div>
+      <div class="red-bar"></div>
+      <h3>Key Claims</h3>
+      <ul>
+        <li><strong>First Amendment Retaliation</strong> — complaint filed in direct response to Sara exercising legal rights</li>
+        <li><strong>42 U.S.C. § 1983</strong> — state actors sustaining a baseless prosecution, denying speedy trial, due process, equal protection</li>
+        <li><strong>Speedy Trial Violation</strong> — N.J. Const. Art. I §10; <em>State v. Szima</em>, 70 N.J. 196 (1976)</li>
+        <li><strong>Malicious Prosecution &amp; Abuse of Process</strong> — complaint filed as leverage to extinguish Mukamal's own criminal exposure</li>
+        <li><strong>Private Prosecutor Without Authority</strong> — R. 7:8-7(b) compliance never confirmed on the record</li>
+      </ul>
+      <br>
+      <h3>Why This Requires Retained Counsel</h3>
+      <ul>
+        <li>Sara's <strong>federal security clearance</strong> is at stake — dismissal on the merits is non-negotiable</li>
+        <li>The record is built: ACJC complaint, recusal motion, speedy trial motion, opposition brief, and preservation of objections are all filed</li>
+        <li>The mayor of Weehawken himself said the delays were excessive. The prosecution continued regardless.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PEOPLE -->
+<div class="s-wrap" style="background:var(--cream);padding:80px 72px">
+<div class="s-inner">
+  <div class="s-label"><span class="s-label-num">02</span><span class="s-label-rule"></span><span class="s-label-title">Key People</span></div>
+  <div class="person-grid">
+    <div class="person-card"><div class="person-name">Sara Ray</div><div class="person-role">Defendant / Client — Pro Se</div><div class="person-note">Former McKinsey consultant; telecom business transformation professional. Federal security clearance holder. Pro se since ~August 2025. sr3768@columbia.edu · (732) 429-7793</div></div>
+    <div class="person-card"><div class="person-name">Brian Mukamal</div><div class="person-role">Complainant</div><div class="person-note">Former neighbor (The Duchess, Unit 1103). Filed complaint 11 days after his own Notice to Cease. Moved into Sara's new building 18 days after her. Perjured himself Feb 26, 2025. Pending North Bergen criminal case (spitting, 0908-S-2024-269).</div></div>
+    <div class="person-card"><div class="person-name">Hon. Lauren R. Olivieri</div><div class="person-role">Municipal Court Judge — Recusal Pending</div><div class="person-note">Subject of pending recusal motion (EF-4042822) and ACJC complaint. Refused to rule on speedy trial motion pre-trial. Stated on record: "I mean, it's already been two years. What's another couple months?" Denied recollection of contempt proceeding on the court's own docket.</div></div>
+    <div class="person-card"><div class="person-name">Carmine LoFaro, Esq.</div><div class="person-role">Mukamal's Attorney / De Facto Prosecutor</div><div class="person-note">LoFaro Carver LLC. Confirmed as prosecutor by Judge Olivieri on record Mar 18, 2026 [17:44–17:49]. No R. 7:8-7(b) compliance confirmed. Filed motion citing the credit card fraud statute (N.J.S.A. 2C:21-6) as the limitations provision.</div></div>
+    <div class="person-card"><div class="person-name">Mayor Richard Turner</div><div class="person-role">Mayor of Weehawken — Potential Witness</div><div class="person-note">Told Sara in ~30-minute call (~April 22, 2025) that case had "dragged on for way too long" and would speak to the prosecutor. Documented in contemporaneous email to then-counsel Berrent same day.</div></div>
+    <div class="person-card"><div class="person-name">Ashley A. Figaro, CMCA</div><div class="person-role">Court Administrator</div><div class="person-note">Confirmed March 18 that LoFaro's motion was not delivered to Sara. Denied Sara access to her own docket history (April 14, 2026) — "not part of public record" — no legal basis provided.</div></div>
+  </div>
+</div>
+</div>
+
+
+
+<!-- TIMELINE -->
+<div class="s-wrap" id="s-timeline" style="background:var(--cream);max-width:none;padding:100px 72px">
+<div class="s-inner">
+  <div class="s-label"><span class="s-label-num">03</span><span class="s-label-rule"></span><span class="s-label-title">Case Timeline</span></div>
+  <div class="display-title">Every event. All documented.</div>
+  <p class="lead" style="margin-bottom:32px">Click any entry to expand detail. From the noise campaign at The Duchess through Hearing #16 on April&nbsp;22, 2026.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px;align-items:center">
+    <span style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-right:4px">Key &mdash;</span>
+    <span style="font-family:var(--mono);font-size:10px;padding:2px 10px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+    <span style="font-family:var(--mono);font-size:10px;padding:2px 10px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+    <span style="font-family:var(--mono);font-size:10px;padding:2px 10px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;background:#EEF7F2;color:#2A6B40;border:1px solid #A0D4B4">Protected Activity</span>
+  </div>
+  <div class="tl-static-wrap">
+<div class="tl-entry-static">
+  <div class="tl-date-static">Dec 15, 2023</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--ink);border:2px solid var(--ink)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Sara moves into Unit 1101. Mukamal in adjacent Unit 1103.</div>
+      <div class="tl-detail-static">Sara transferred to Unit 1101 at The Duchess. Mukamal occupied Unit 1103, sharing a wall with Sara's master bedroom. The noise harassment begins almost immediately.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Dec 2023Jan 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Noise campaign begins. Master bedroom unlivable.</div>
+      <div class="tl-detail-static">Mukamal's sound system penetrates the shared wall with force. Closet hangers vibrate and clatter. Sara cannot sleep in the master bedroom once during her entire tenancy at Unit 1101. She reports the noise to management in writing repeatedly. [DUCHESS000080; DUCHESS Interrogatory Resp. pp. 78]</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Feb 1, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--cream);border:2px solid var(--rule)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Gutierrez follow-up: situation has not improved.</div>
+      <div class="tl-detail-static">Property manager Benedicta Gutierrez emails Sara to ask if the noise situation has improved. Sara confirms it has not.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Feb 22, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--cream);border:2px solid var(--rule)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Dytyniak escalates to SVP  two months after first complaint.</div>
+      <div class="tl-detail-static">Building manager Andrew Dytyniak finally escalates to Yvette Stewart-Glimp (SVP Property Management)  more than two months after Sara's initial complaint. Nothing changes.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">EarlyMid 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Harassment escalates: verbal threats, intimidating letters, spitting.</div>
+      <div class="tl-detail-static">Mukamal makes verbal threats of physical harm to Sara and Manuel. Leaves intimidating written letters outside their unit. Spits on grocery deliveries. His own written admission: "I should not have spit at his door. I did not mean to spit on his groceries." Dytyniak confirms on video: "When reviewing footage we can confirm he did spit on their items." North Bergen Case 0908-S-2024-269. [DUCHESS000300301; DUCHESS000315]</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">May 2, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mukamal abuses building staff. Calls manager a "bitch" in front of a child.</div>
+      <div class="tl-detail-static">Mukamal throws a lease violation letter onto the elevator floor and verbally abuses property manager Benedicta Gutierrez, calling her a "bitch" in front of a child. [DUCHESS000281292]</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">April 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#FAF5E8;border:2px solid var(--gold)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Notice to Cease issued to Mukamal  six months after first complaint.</div>
+      <div class="tl-detail-static">Notice to Cease hand-delivered to Mukamal [DUCHESS000184, 000237]. This is the same Notice to Cease Mukamal later submitted as his "evidence" against Sara  he received it for his own conduct.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Jun 19, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mukamal throws bag at property manager; registers harassment website.</div>
+      <div class="tl-detail-static">Throws bag at Gutierrez; records her without consent [DUCHESS000255]. Registers domain "DuchessSucksAndrewandBenedicta" [DUCHESS000252]. Defendants' own attorney advised 3-day NTQ for terroristic threats was available  not pursued [DUCHESS000349].</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Jul 3, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#FAF5E8;border:2px solid var(--gold)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Sara formally notifies building of intent to vacate. Break-lease fees waived.</div>
+      <div class="tl-detail-static">Sara sends formal notice citing Mukamal's harassment and management's failure. SVP Yvette Stewart-Glimp responds: "We understand and we are so sorry. We are following the law and unfortunately it is taking time. You will not be charged any break lease fees."</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Late JulAug 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--cream);border:2px solid var(--rule)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Two Notices to Quit issued to Mukamal  after Sara already gave notice.</div>
+      <div class="tl-detail-static">Defendants finally issue two Notices to Quit with August 31, 2024 deadline [DUCHESS000220]. Sara had already given notice to vacate.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Aug 12, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--ink);border:2px solid var(--ink)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Sara & Manuel move to Hoboken Point, Unit 701S.</div>
+      <div class="tl-detail-static">Sara and Manuel move to 100 Harbor Blvd, Weehawken, NJ. They believe the conflict is over.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Aug 2122, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mukamal emails: "another project."</div>
+      <div class="tl-detail-static">"Now, my intention was to just move, and move on to another project once I was out of this garbage environment, but you seem to want to keep pushing me."  Mukamal to Duchess manager, written while relocating to Sara's new building. [DUCHESS000332]</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Aug 30, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mukamal moves into Sara's new building. Unit 509N.</div>
+      <div class="tl-detail-static">Eighteen days after Sara. Per his own sworn statement to Weehawken PD he claims he moved to "avoid further conflict." Sara is in Unit 701S. [Investigation Report 24-31824A]</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Sept 2, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Pool deck confrontation. Sara files police report same day at 5:16 PM.</div>
+      <div class="tl-detail-static">Mukamal approaches Sara and Manuel on the patio. First words (before Sara records): "I found us and we get to be together again!" Calls Sara a "Karen." Sara responds with a comment about his age. Sara and Manuel file police report FIRST  5:16 PM (CAD 24-29264). Officer Echanique documents Mukamal's words; Sara described as "creeped out" and "frightened."</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Sept 21, 2024</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mukamal files retaliatory criminal complaint. Nineteen days after the incident.</div>
+      <div class="tl-detail-static">Mukamal goes to Weehawken PD at 16:01 hours. Eleven days after his own Notice to Cease from Hoboken Point/Greystar. In his account to Officer McCall, he attributes a fabricated quote to Manuel: "I am going to ruin you like we did in the last building." This statement does not appear on the audio recording.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Feb 7, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#FAF5E8;border:2px solid var(--gold)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mediation: Mukamal offers mutual dismissal.</div>
+      <div class="tl-detail-static">Mukamal's counsel proposes: drop Weehawken charges against Sara/Manuel in exchange for Sara dropping North Bergen spitting complaint (0908-S-2024-269). Sara refuses. This reveals the complaint's true purpose  leverage to extinguish Mukamal's own criminal exposure.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Feb 26, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mukamal perjures himself. Claims to be "out of country."</div>
+      <div class="tl-detail-static">Mukamal claims to be outside the country. Gym surveillance footage and key fob access records prove he was in the building. Court accepted his verbal claim with no documentation. Sara, by contrast, provided formal adjournment letters with hotel confirmation #17803024  25 days in advance.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Apr 16, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--cream);border:2px solid var(--rule)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Contempt proceeding initiated.</div>
+      <div class="tl-detail-static">Contempt proceeding entered on court docket re: Mukamal's perjured Feb 26 statement. Rescheduled to Aug 20, 2025 alongside trial. Continued by court instruction. Judge Olivieri later denied on the record having any recollection of it.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Apr 18, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#EEF7F2;border:2px solid #2A6B40"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:#EEF7F2;color:#2A6B40;border:1px solid #A0D4B4">Protected Activity</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Sara petitions Mayor Turner.</div>
+      <div class="tl-detail-static">Formal written petition to rturner@weehawken-nj.us. Sara requests oversight and inquiry. ~30-minute phone call follows (~Apr 22). Mayor states he agrees case has "dragged on for way too long," will make inquiries, will speak to the prosecutor.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">~Apr 22, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#FAF5E8;border:2px solid var(--gold)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Mayor Turner: case has "dragged on for way too long."</div>
+      <div class="tl-detail-static">Mayor Turner calls Sara. Sara documents in contemporaneous email to then-counsel Berrent: "He agrees that it has dragged on for way too long but is curious to know where they see this all going."</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Jun 4, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Trial date offered by defense rejected; calendar built around LoFaro.</div>
+      <div class="tl-detail-static">Mott offered July 24, 25, 28. Judge: "That's fantastic. But I don't have court those days, so that's not happening." Court built August 20 trial date around LoFaro's Camden County trial + family vacation. Aug 20 trial date silently evaporated  7-month gap to next hearing.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Jun 5, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#EEF7F2;border:2px solid #2A6B40"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Sara files cross-complaint against Mukamal. 89 days before SOL.</div>
+      <div class="tl-detail-static">Filed on court-ordered deadline. 89 days before the September 2, 2025 statute of limitations expiration. Docket 0911-S-2025-000092. Probable cause found November 25, 2025.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Dec 2, 2025</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Prosecutor confirms in writing: no video exists.</div>
+      <div class="tl-detail-static">Phyllis Walsh, Weehawken Prosecutor's Discovery Coordinator: "Our office has not received any video recordings from Brian Mukamal." The prosecution's chief claimed evidence does not exist. The prosecution continues.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Jan 21, 2026</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Hearing #14: Remote access denied to Sara; granted to LoFaro & Mukamal. Pro se right disparaged.</div>
+      <div class="tl-detail-static">Sara called Jan 20 to request remote appearance  denied. LoFaro and Mukamal appeared virtually. Judge stated: "I would seriously consider hiring an attorney... that's why we go to school for law school for three years." [Jan 21, 2026 transcript]</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Jan 24, 2026</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#FAF5E8;border:2px solid var(--gold)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Speedy Trial Motion filed. OPIA complaint filed.</div>
+      <div class="tl-detail-static">Motion to Dismiss for Speedy Trial Violation filed per N.J. Const. Art. I 10 and State v. Szima, 70 N.J. 196 (1976). OPIA complaint against Judge Olivieri filed same day.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Mar 2, 2026</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--cream);border:2px solid var(--rule)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">LoFaro files motion to dismiss Sara's cross-complaint. Never serves Sara.</div>
+      <div class="tl-detail-static">LoFaro submits motion to court, asks court to forward. Sara never receives it. Motion cites N.J.S.A. 2C:21-6 (credit card fraud statute) as the applicable limitations provision.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Mar 18, 2026</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Hearing #15: Unserved motion, silencing, prejudgment  all on the record.</div>
+      <div class="tl-detail-static">Judge states she is "ready to go" on a motion Sara has never received. LoFaro: "I think it's clear what the ruling should be." Judge: "Absolutely."  after reviewing only LoFaro's papers. Judge refuses to rule on speedy trial motion until trial. Judge: "I mean, it's already been two years. What's another couple months?" Judge confirms LoFaro is prosecuting on the record.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Mar 21, 2026</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:#FAF5E8;border:2px solid var(--gold)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">ACJC complaint + supplement filed. Recusal motion filed via JEDS (EF-4042822).</div>
+      <div class="tl-detail-static">ACJC complaint + supplement against Judge Olivieri filed. Recusal motion filed via JEDS, returnable April 22, 2026.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Apr 1415, 2026</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--red-lt);border:2px solid var(--red)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:rgba(15,14,12,.08);color:var(--ink);border:1px solid var(--rule)">Key Evidence</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Court denies Sara access to her own docket history. Audio records received.</div>
+      <div class="tl-detail-static">Court Administrator Figaro denies Sara's MACS case activity log request  "not part of public record." No legal basis provided. Sara appeals per R. 1:38-10(b). Audio recordings (CN 12605) received separately  in Sara's possession.</div>
+    </div>
+  </div>
+</div>
+<div class="tl-entry-static">
+  <div class="tl-date-static">Apr 22, 2026</div>
+  <div class="tl-body-static">
+    <div class="tl-dot-static" style="background:var(--ink);border:2px solid var(--ink)"></div>
+    <div class="tl-card-static" onclick="this.classList.toggle('tl-open')">
+      <span class="tl-arr-static">+</span>
+      <span style="display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:6px;background:var(--red-lt);color:var(--red);border:1px solid #D4A0A0">Municipal</span>
+      <div style="font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;line-height:1.4">Hearing #16. Recusal motion returnable. No trial date ever set.</div>
+      <div class="tl-detail-static">Recusal motion pending 32 days without ruling. Speedy trial motion still unruled. Opposition to LoFaro's motion filed. Preservation of Objections filed.</div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+</div>
+
+<!-- THE FACTS -->
+<div class="s-wrap white" id="s-facts">
+<div class="s-inner">
+  <div class="s-label"><span class="s-label-num">04</span><span class="s-label-rule"></span><span class="s-label-title">The Facts</span></div>
+  <div class="display-title">What actually happened.</div>
+  <div class="lead">Mukamal approached Sara on September 2, 2024. She filed a police report that same afternoon — before he filed anything. The video he claimed to have does not exist. The quote he attributed to Manuel does not appear on the recording.</div>
+
+  <div class="fact-cards">
+    <div class="fact-card">
+      <div class="fact-card-label">The Encounter</div>
+      <div class="fact-card-title">Mukamal approached Sara. Sara filed the police report first.</div>
+      <div class="fact-card-body">At 5:16 PM on September 2, 2024, Sara and Manuel filed police report CAD 24-29264 — the same day as the incident, before Mukamal filed anything. Nineteen days later, Mukamal filed his complaint. Eleven days after receiving his own Notice to Cease from the building.</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-card-label">The Recording</div>
+      <div class="fact-card-title">Mukamal's threatening statement is on tape. His fabricated quote is not.</div>
+      <div class="fact-card-body">Audio diarization (Deepgram, Feb 24, 2026) confirms Mukamal said: "The whole building will know about you, buddy." The quote he attributed to Manuel — "I am going to ruin you like we did in the last building" — does not appear anywhere on the recording.</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-card-label">The Video</div>
+      <div class="fact-card-title">The prosecution's chief claimed evidence does not exist.</div>
+      <div class="fact-card-body">Mukamal claimed to have video of the incident. On December 2, 2025, Phyllis Walsh, Discovery Coordinator of the Weehawken Prosecutor's Office, confirmed in writing: <em>"Our office has not received any video recordings from Brian Mukamal."</em></div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-card-label">The Perjury</div>
+      <div class="fact-card-title">Mukamal claimed to be out of the country. He was in the building.</div>
+      <div class="fact-card-body">On February 26, 2025, Mukamal claimed to be outside the country and unable to attend court. Gym surveillance footage and key fob access records place him in the building that day. The court accepted his verbal claim with no documentation.</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-card-label">The True Purpose</div>
+      <div class="fact-card-title">Mukamal's counsel offered mutual dismissal at mediation.</div>
+      <div class="fact-card-body">At the February 7, 2025 mediation, Mukamal's counsel proposed: drop Weehawken charges against Sara/Manuel in exchange for Sara dropping her North Bergen spitting complaint (Case 0908-S-2024-269). Sara refused. This reveals the complaint's true purpose: leverage.</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-card-label">The Charges</div>
+      <div class="fact-card-title">A comment about someone's age. No threats. No contact. No record.</div>
+      <div class="fact-card-body">Sara's documented conduct during the incident: a reactive comment about Mukamal's age after he approached her and taunted her. No physical contact. No threats. No prior criminal record. Sara twice told Manuel "don't talk to him" — actively de-escalating the encounter.</div>
+    </div>
+  </div>
+
+  <h2>Lack of Probable Cause</h2>
+  <div class="two-col">
+    <div>
+      <h3>Disorderly Conduct — N.J.S.A. 2C:33-2</h3>
+      <p>Requires: purpose to cause public inconvenience, annoyance or alarm through fighting/threatening/violent behavior or creating a hazardous condition.</p>
+      <p><strong>The record:</strong> Sara did not approach Mukamal. He approached her. Her verbal response was reactive. No physical contact. No threats. De-escalating language is on the recording.</p>
+    </div>
+    <div>
+      <h3>Harassment — N.J.S.A. 2C:33-4</h3>
+      <p>Requires: purpose to harass through offensively coarse language, offensive touching, or a course of alarming conduct.</p>
+      <p><strong>The record:</strong> "How old are you? 50? Grow up" — said once, reactively — is not offensively coarse language. A single encounter is not a "course of alarming conduct."</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MISCONDUCT -->
+<div class="s-wrap dark" id="s-conduct">
+<div class="s-inner">
+  <div class="s-label" style="--rule:rgba(255,255,255,.15)">
+    <span class="s-label-num" style="color:rgba(255,255,255,.3)">05</span>
+    <span style="flex:1;height:1px;background:rgba(255,255,255,.12)"></span>
+    <span class="s-label-title" style="color:rgba(255,255,255,.3)">Prosecution &amp; Judicial Conduct</span>
+  </div>
+  <div class="display-title light">Eight documented incidents. All on the record.</div>
+
+  <div class="accord" style="margin-top:48px">
+    <div class="accord-item">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">01</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Remote access denied to Sara; granted to LoFaro &amp; Mukamal — Jan 21, 2026</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)">Sara called January 20 to request remote appearance — denied. At the hearing, LoFaro and Mukamal both appeared virtually. The physical burden of in-person appearance was imposed exclusively on the unrepresented defendant. <em>Canon 3(E)(1) — appearance of partiality.</em></div>
+    </div>
+    <div class="accord-item" style="border-color:rgba(255,255,255,.08)">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">02</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Disparagement of pro se right — Jan 21, 2026</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)">"I would seriously consider hiring an attorney, because since they are cross complaints, you're also prosecuting him, not just defending yourself. Technically, it's difficult. That's why we go to school for three years." — Judge Olivieri [Transcript 06:52–09:38]. The right to proceed pro se is expressly preserved by R. 1:21-1(a). <em>Canon 3(B)(4).</em></div>
+    </div>
+    <div class="accord-item" style="border-color:rgba(255,255,255,.08)">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">03</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Prejudgment communicated to LoFaro before Sara was heard — Mar 18, 2026</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)">Judge announced she was "going to say they caused the delay" before Sara was heard on either motion. LoFaro: "I think it's clear what the ruling should be." Judge: "Absolutely." — after reviewing only LoFaro's papers. [Transcript 13:10–13:28]. <em>Canon 3(B)(5); Canon 3(E)(1).</em></div>
+    </div>
+    <div class="accord-item" style="border-color:rgba(255,255,255,.08)">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">04</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Ready to rule despite confirmed service failure — Mar 18, 2026</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)"><strong style="color:rgba(255,255,255,.75)">It was Sara who first raised the service defect on the record</strong> [02:18]. The judge then spent approximately ten minutes questioning multiple staff members on the record to verify it — Ashley Figaro, Karen, and others. Every one confirmed the motion had not been served. LoFaro himself finally conceded: “The bottom line is, it didn’t get to them, apparently.” [09:20].<br><br>Only after this extended on-record verification did the judge state: “I am prepared to rule on the motion, but I do need to give them an opportunity to review it.” [13:02]. The court was still prepared to proceed on a motion its own staff had just confirmed was never served — until <strong style="color:rgba(255,255,255,.75)">LoFaro himself stopped it</strong>, warning that ruling without Sara having seen the motion would be “an immediate appeal.” [13:10]. The restraint came from LoFaro’s tactical calculation, not any concern for Sara’s rights.<br><br>Throughout the verification, whenever Sara attempted to speak to confirm she had not received the motion, the judge silenced her: “I’m going to say one more time, if you don’t mind — not speaking because we’re on the record.” [06:08]. The defendant who had just been proven right was told to stop talking while the court investigated whether she was telling the truth. <em>Canon 3(B)(4); Canon 3(E)(1).</em></div>
+    </div>
+    <div class="accord-item" style="border-color:rgba(255,255,255,.08)">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">05</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Denial of recollection of pending contempt proceeding — Mar 18, 2026</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)">"I don't see anything when I was going through the file. I don't see a complaint for contempt." [Transcript 17:14–17:25]. The contempt proceeding is on the court's own docket: initiated April 16, 2025; rescheduled to August 20, 2025; continued by court instruction. <em>Canon 3(B)(1); Canon 3(B)(8).</em></div>
+    </div>
+    <div class="accord-item" style="border-color:rgba(255,255,255,.08)">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">06</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Ex parte communications observed — Mar 18, 2026</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)">Sara observed the former municipal prosecutor — holding no formal role — moving between LoFaro and Judge Olivieri and appearing to brief the judge on the case outside Sara's participation. ACJC complaint requests investigation. <em>Canon 3(B)(7).</em></div>
+    </div>
+    <div class="accord-item" style="border-color:rgba(255,255,255,.08)">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">07</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Repeated expression of preference for mutual dismissal — Jan 21 &amp; Mar 18</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)">"I've always thought that would be the best way to resolve this matter." [Transcript 21:28–21:59] — stated at both the January 21 and March 18 hearings. A judge presiding over a criminal matter may not express a personal preference for its resolution. <em>Canon 3A(6).</em></div>
+    </div>
+    <div class="accord-item" style="border-color:rgba(255,255,255,.08)">
+      <div class="accord-hdr" onclick="toggleAccord(this)">
+        <span class="accord-num" style="color:rgba(255,255,255,.3)">08</span>
+        <span class="accord-title" style="color:rgba(255,255,255,.8)">Refusal to recognize Sara as pro se — Fall 2025</span>
+        <span class="accord-ico" style="color:rgba(255,255,255,.3)">+</span>
+      </div>
+      <div class="accord-body" style="color:rgba(255,255,255,.5)">The court refused to acknowledge Sara as a pro se defendant because Mott had not filed the required formal withdrawal form. The court used Mott's paperwork failure to deny Sara standing to speak for herself. The failure was Mott's, not Sara's. <em>R. 1:21-1(a); Canon 3(B)(4).</em></div>
+    </div>
+  </div>
+
+  <blockquote style="margin-top:56px;border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)">
+    <em style="color:rgba(255,255,255,.7)">"Viewed together, these incidents describe a proceeding in which a pro se litigant is demeaned for representing herself, silenced when she speaks, disbelieved when she is corroborated, excluded from the court's communications with opposing counsel, and denied the constitutional protections that are the floor of every criminal proceeding in this State."</em>
+    <cite style="color:rgba(255,255,255,.3)">— ACJC Complaint v4, March 21, 2026</cite>
+  </blockquote>
+
+  <div style="margin-top:64px">
+    <div style="color:rgba(255,255,255,.4);font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px">Speedy Trial — Barker v. Wingo Analysis</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)">
+      <div style="background:#1A1814;padding:28px 24px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px">Factor 1</div>
+        <div style="font-family:var(--serif);font-size:18px;color:#fff;margin-bottom:10px">Length of Delay</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.65">550+ days on a petty disorderly persons offense with a maximum $500 fine. 16 appearances. No trial date ever set. Presumptively prejudicial.</div>
+      </div>
+      <div style="background:#1A1814;padding:28px 24px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px">Factor 2</div>
+        <div style="font-family:var(--serif);font-size:18px;color:#fff;margin-bottom:10px">Reason for Delay</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.65">Calendar built around LoFaro's Camden County trial and family vacation. 7-month unexplained gap. Court refused to rule on speedy trial motion pre-trial. Mayor intervened — to no effect.</div>
+      </div>
+      <div style="background:#1A1814;padding:28px 24px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px">Factor 3</div>
+        <div style="font-family:var(--serif);font-size:18px;color:#fff;margin-bottom:10px">Assertion of Right</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.65">Asserted through prior counsel; in formal written motion Jan 24, 2026; in correspondence with Mayor Turner; in Preservation of Objections. Court's response: defer to trial — which is itself constitutional error.</div>
+      </div>
+      <div style="background:#1A1814;padding:28px 24px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px">Factor 4</div>
+        <div style="font-family:var(--serif);font-size:18px;color:#fff;margin-bottom:10px">Prejudice</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.65">$40,000+ in prior legal fees. Federal security clearance at risk. 550+ days of oppressive pretrial anxiety on a charge lacking probable cause.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TRANSCRIPTS -->
+<div class="s-wrap white" id="s-transcripts">
+<div class="s-inner">
+  <div class="s-label"><span class="s-label-num">06</span><span class="s-label-rule"></span><span class="s-label-title">Hearing Transcripts</span></div>
+  <div class="display-title">The record speaks for itself.</div>
+
+  <!-- T1: June 4 2025 -->
+  <h2>June 4, 2025 &mdash; Trial Date Scheduling <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:1px solid var(--rule);padding-bottom:1px;margin-left:16px" onclick="navTo('s-timeline')">&larr; Timeline</span></h2>
+  <div class="callout gold"><div class="callout-lbl">Key Moments</div>Defense dates rejected [04:05] &nbsp;&middot;&nbsp; Calendar built around LoFaro&rsquo;s vacation [05:28] &nbsp;&middot;&nbsp; August 20 trial date set &mdash; then silently evaporated</div>
+  <div class="transcript">
+    <div class="t-top">
+      <div class="t-top-title">June 4, 2025 &mdash; Weehawken Municipal Court</div>
+      <div class="t-legend">
+        <div class="t-leg"><div class="t-leg-dot" style="background:#5B9BD5"></div>Judge Olivieri</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#C090D0"></div>Jeffrey Mott (defense)</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#D4A840"></div>LoFaro</div>
+      </div>
+    </div>
+    <div class="t-jumps">
+      <button class="t-jump" onclick="jumpTo('tb64','km64a')">Defense Dates Rejected [04:05]</button>
+      <button class="t-jump" onclick="jumpTo('tb64','km64b')">Built Around LoFaro's Vacation [05:28]</button>
+    </div>
+    <div class="t-body" id="tb64">
+<div class="t-line"><span class="t-ts">[03:44]</span><span class="spk-j">JUDGE OLIVIERI: All right, well, let's just put it down for a trial. Let's pick a trial date. We are middle July is where we are at this point.</span></div>
+<div class="t-line hl" id="km64a"><span class="t-ts">[04:05]</span><span class="spk-m">JEFFREY MOTT: 24, 25, and 28 of July. Ready if the court so chooses.</span></div>
+<div class="t-line hl"><span class="t-ts">[04:14]</span><span class="spk-j">JUDGE OLIVIERI: We have court on Tuesdays, Wednesdays, and Thursday nights. So I don't think any of those dates that you just said were any of those weekdays. I prefer not to do this in the evening because we start at 5 and we're not going to be done until 10.</span></div>
+<div class="t-line"><span class="t-ts">[04:39]</span><span class="spk-l">CARMINE LOFARO: Your Honor, I am scheduled to commence a trial in Camden County on the 14th. That trial is probably going to take approximately two weeks. So I might not be available the week of the 21st.</span></div>
+<div class="t-line"><span class="t-ts">[05:15]</span><span class="spk-j">JUDGE OLIVIERI: Okay, so let's do August then. August 13th.</span></div>
+<div class="t-line hl" id="km64b"><span class="t-ts">[05:28]</span><span class="spk-l">CARMINE LOFARO: Your Honor, I sincerely apologize. I'm on a pre-planned vacation with my family the week of the 11th.</span></div>
+<div class="t-line hl"><span class="t-ts">[05:40]</span><span class="spk-j">JUDGE OLIVIERI: Absolutely not. Unacceptable. We need the vacation. All right, how about the 20th, which is also Wednesday, August 20th?</span></div>
+<div class="t-line"><span class="t-ts">[06:05]</span><span class="spk-m">JEFFREY MOTT: My clients are available Monday, Thursday and Friday.</span></div>
+<div class="t-line hl"><span class="t-ts">[06:08]</span><span class="spk-j">JUDGE OLIVIERI: That's fantastic. But I don't have court those days, so that's not happening. I'm now coming in on a separate date just to try this. I'm putting it on now for August 20th.</span></div>
+    </div>
+  </div>
+
+  <!-- T2: January 21 2026 -->
+  <h2 style="margin-top:56px">January 21, 2026 &mdash; Hearing #14 <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:1px solid var(--rule);padding-bottom:1px;margin-left:16px" onclick="navTo('s-timeline')">&larr; Timeline</span></h2>
+  <div class="callout red"><div class="callout-lbl">Key Moments</div>Remote access denied to Sara; LoFaro &amp; Mukamal appear virtually &nbsp;&middot;&nbsp; Prosecutor Reisman coaches LoFaro on the record &nbsp;&middot;&nbsp; Pro se right disparaged [06:52] &nbsp;&middot;&nbsp; Sara asserts speedy trial [07:57]</div>
+  <div class="transcript">
+    <div class="t-top">
+      <div class="t-top-title">January 21, 2026 &mdash; Weehawken Municipal Court &middot; Hearing #14</div>
+      <div class="t-legend">
+        <div class="t-leg"><div class="t-leg-dot" style="background:#5B9BD5"></div>Judge Olivieri</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#60C878"></div>Sara Ray</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#D4A840"></div>LoFaro</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#7090A8"></div>Prosecutor Reisman</div>
+      </div>
+    </div>
+    <div class="t-jumps">
+      <button class="t-jump" onclick="jumpTo('tb121','km121a')">Pro Se Disparagement [06:52]</button>
+      <button class="t-jump" onclick="jumpTo('tb121','km121b')">Sara Asserts Speedy Trial [07:57]</button>
+    </div>
+    <div class="t-body" id="tb121">
+<div class="t-line"><span class="t-ts">[00:00]</span><span class="spk-j">JUDGE OLIVIERI: This is going to be a little difficult because we have people in court and on zoom. But we'll try our best. This is the matter of Brian Mukamal and Sara Ray and Manuel.</span></div>
+<div class="t-line"><span class="t-ts">[00:19]</span><span class="spk-l">CARMINE LOFARO: Your Honor, Carmine Lofaro, attorney for Brian Mukamal.</span></div>
+<div class="t-line"><span class="t-ts">[00:36]</span><span class="spk-j">JUDGE OLIVIERI: Thank you. Mr. Prosecutor. Standing in as assistance to the court. He's not involved in this. So what you've informed me is that there's some outstanding discovery still.</span></div>
+<div class="t-line"><span class="t-ts">[00:57]</span><span class="spk-o">PROSECUTOR REISMAN: Yes, as far as Mr. Lofaro is concerned. He's going to write to Ms. Walsh. She has the correct information now to request discovery and told me he'll do that forthwith.</span></div>
+<div class="t-line"><span class="t-ts">[01:08]</span><span class="spk-j">JUDGE OLIVIERI: Okay. Number two is there's going to be a motion filed to dismiss based upon an incident that occurred in North Bergen. Is that correct, Mr. Lofaro?</span></div>
+<div class="t-line"><span class="t-ts">[01:21]</span><span class="spk-l">CARMINE LOFARO: Your Honor, our plan is once we receive discovery. We're hoping that there's information that will be the basis for a motion to dismiss. The North Bergen matter &mdash; my client was dismissed months ago by Judge Coviella with prejudice.</span></div>
+<div class="t-line hl"><span class="t-ts">[01:51]</span><span class="spk-o">PROSECUTOR REISMAN [coaching LoFaro on record]: The way to break it is I think you have to file a motion to unseal the record temporarily in the superior court, and then they'll sign an order telling the court to open up the expunged file, make copies of everything, give it to you, and re-seal it. To avoid further delay, sir, file that motion in the superior court to unseal the expunged trial, and the superior court judge will sign the order, send it to the court, then they'll open it and give you copies of everything, and then reseal it.</span></div>
+<div class="t-line hl"><span class="t-ts">[note]</span><span style="color:#E07070;font-style:italic">Judge Olivieri did not interrupt or limit Reisman's on-record coaching of LoFaro on how to obtain Sara's expunged records.</span></div>
+<div class="t-line"><span class="t-ts">[02:56]</span><span class="spk-j">JUDGE OLIVIERI: I just am still confused about how an incident in North Bergen could have anything to do with something that happened in Weehawken.</span></div>
+<div class="t-line"><span class="t-ts">[04:00]</span><span class="spk-l">CARMINE LOFARO: I know these cases are old, we put it over about 60 days. I'm not trying to stall, your honor. I'm just trying to defend my client.</span></div>
+<div class="t-line hl" id="km121a"><span class="t-ts">[06:52]</span><span class="spk-j">JUDGE OLIVIERI: I would seriously consider hiring an attorney, because since they are cross complaints, you're also prosecuting him, not just defending yourself. Technically, it's difficult. That's why we go to school for three years. So it's something you should consider.</span></div>
+<div class="t-line"><span class="t-ts">[07:19]</span><span class="spk-s">SARA RAY: Your honor, we want to proceed pro se. The incident that we're here for is about harassment at a completely different property. I believe the North Bergen dismissal was a technical prosecutor error &mdash; not a finding of innocence.</span></div>
+<div class="t-line hl" id="km121b"><span class="t-ts">[07:57]</span><span class="spk-s">SARA RAY: Overall, again, our right to a speedy trial. For the record, this is going on almost two years for our petty misdemeanor.</span></div>
+<div class="t-line"><span class="t-ts">[08:19]</span><span class="spk-j">JUDGE OLIVIERI: I would seriously consider hiring an attorney. Technically, it's difficult. That's why we go to school for three years. If you want to proceed pro se, we'll deal with that then.</span></div>
+<div class="t-line"><span class="t-ts">[10:12]</span><span class="spk-j">JUDGE OLIVIERI: How about March 18th?</span></div>
+<div class="t-line"><span class="t-ts">[10:44]</span><span class="spk-l">CARMINE LOFARO: March 18th. That works for me, your Honor.</span></div>
+<div class="t-line"><span class="t-ts">[10:55]</span><span class="spk-j">JUDGE OLIVIERI: All right, thank you very much.</span></div>
+    </div>
+  </div>
+
+  <!-- T3: March 18 2026 -->
+  <h2 style="margin-top:56px">March 18, 2026 &mdash; Hearing #15 <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:1px solid var(--rule);padding-bottom:1px;margin-left:16px" onclick="navTo('s-timeline')">&larr; Timeline</span></h2>
+  <div class="callout red"><div class="callout-lbl">Key Moments</div>Prejudgment [13:10] &nbsp;&middot;&nbsp; Speedy trial deferred [14:18] &nbsp;&middot;&nbsp; LoFaro confirmed as prosecutor [17:44] &nbsp;&middot;&nbsp; &ldquo;What&rsquo;s another couple months&rdquo; [22:15]</div>
+  <div class="transcript">
+    <div class="t-top">
+      <div class="t-top-title">March 18, 2026 &mdash; Weehawken Municipal Court &middot; Hearing #15</div>
+      <div class="t-legend">
+        <div class="t-leg"><div class="t-leg-dot" style="background:#5B9BD5"></div>Judge Olivieri</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#60C878"></div>Sara Ray</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#D4A840"></div>LoFaro</div>
+        <div class="t-leg"><div class="t-leg-dot" style="background:#7090A8"></div>Clerk</div>
+      </div>
+    </div>
+    <div class="t-jumps">
+      <button class="t-jump" onclick="jumpTo('tb318','km1')">Prejudgment [13:10]</button>
+      <button class="t-jump" onclick="jumpTo('tb318','km2')">Speedy Trial Deferred [14:18]</button>
+      <button class="t-jump" onclick="jumpTo('tb318','km3')">LoFaro Is Prosecuting [17:44]</button>
+      <button class="t-jump" onclick="jumpTo('tb318','km4')">&ldquo;What&rsquo;s Another Couple Months&rdquo; [22:15]</button>
+    </div>
+    <div class="t-body" id="tb318">
+<div class="t-line"><span class="t-ts">[00:13]</span><span class="spk-l">CARMINE LOFARO: Good afternoon, your honor. Carmine Lofaro, on behalf of Mr. Brian Mukamal.</span></div>
+<div class="t-line"><span class="t-ts">[00:25]</span><span class="spk-j">JUDGE OLIVIERI: Thank you. So the first motion I have before me is the motion to dismiss based upon the statute of limitations issue.</span></div>
+<div class="t-line"><span class="t-ts">[01:03]</span><span class="spk-l">CARMINE LOFARO: The complaint against my client was not filed and served until well after September of 2025 &mdash; well after the one year statute of limitations. Under the statute, it's 100% clear the court has no discretion to extend the statute. And on that simple basis, the complaint should be dismissed.</span></div>
+<div class="t-line"><span class="t-ts">[02:11]</span><span class="spk-s">SARA RAY: Object to what he says. We filed the counter complaint in May or June.</span></div>
+<div class="t-line"><span class="t-ts">[02:18]</span><span class="spk-s">SARA RAY: And there was an extensive delay until we had the hearing. Also, we were not served this motion, so we haven't had an opportunity to respond.</span></div>
+<div class="t-line"><span class="t-ts">[02:37]</span><span class="spk-l">CARMINE LOFARO: Your honor, when I filed the motion, I was advised by your Honor's clerk that we cannot give you their address. We will serve it for you. So I assumed the court had forwarded this motion.</span></div>
+<div class="t-line"><span class="t-ts">[03:12]</span><span class="spk-s">SARA RAY: Yeah, we did not receive it.</span></div>
+<div class="t-line"><span class="t-ts">[08:47]</span><span class="spk-o">COURT CLERK: I didn't even see it.</span></div>
+<div class="t-line"><span class="t-ts">[09:20]</span><span class="spk-l">CARMINE LOFARO: The bottom line is, it didn't get to them, apparently.</span></div>
+<div class="t-line hl"><span class="t-ts">[13:02]</span><span class="spk-j">JUDGE OLIVIERI: All right. I mean, I am prepared to rule on the motion, but I do need to give them an opportunity to review it.</span></div>
+<div class="t-line hl" id="km1"><span class="t-ts">[13:10]</span><span class="spk-l">CARMINE LOFARO: Your honor, my fear is if you rule today &mdash; I don't want to sound overly confident. I think it's clear what the ruling should be. My concern is that the court rules today without them having had an opportunity to respond. It's an immediate appeal.</span></div>
+<div class="t-line hl"><span class="t-ts">[13:28]</span><span class="spk-j">JUDGE OLIVIERI: Absolutely.</span></div>
+<div class="t-line"><span class="t-ts">[13:49]</span><span class="spk-s">SARA RAY: We do have another motion &mdash; a speedy trial motion to dismiss &mdash; that I'm hoping to hear about today.</span></div>
+<div class="t-line hl" id="km2"><span class="t-ts">[14:18]</span><span class="spk-j">JUDGE OLIVIERI: Okay. I'm not going to do that because I'm going to handle both of them on the same date.</span></div>
+<div class="t-line hl" id="km3"><span class="t-ts">[17:44]</span><span class="spk-s">SARA RAY: So Mr. Lofaro was prosecuting us, correct?</span></div>
+<div class="t-line hl"><span class="t-ts">[17:47]</span><span class="spk-j">JUDGE OLIVIERI: Correct. Okay.</span></div>
+<div class="t-line"><span class="t-ts">[21:08]</span><span class="spk-s">SARA RAY: I came here today because I was interested in mutual dismissal, because I think going on two years is just excessive. But to review the motion, I would need two to three weeks.</span></div>
+<div class="t-line"><span class="t-ts">[21:28]</span><span class="spk-j">JUDGE OLIVIERI: Okay. I've always thought that would be the best way to resolve this matter.</span></div>
+<div class="t-line hl" id="km4"><span class="t-ts">[22:15]</span><span class="spk-j">JUDGE OLIVIERI: I mean, it's already been two years. What's another couple months?</span></div>
+<div class="t-line"><span class="t-ts">[23:26]</span><span class="spk-j">JUDGE OLIVIERI: So we're gonna say April 22nd at 12 o'clock. All right. Thank you very much.</span></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- EVIDENCE & CLAIMS -->
+<div class="s-wrap" style="background:var(--cream);padding:80px 72px" id="s-claims">
+<div class="s-inner">
+  <div class="s-label"><span class="s-label-num">07</span><span class="s-label-rule"></span><span class="s-label-title">Evidence &amp; Legal Claims</span></div>
+
+  <div class="display-title">The record is built.</div>
+  <div class="lead">Every motion is filed. Every piece of evidence is documented. Here is what counsel walks into.</div>
+
+  <div class="ev-tabs">
+    <button class="ev-tab active" onclick="showEvTab(this,'ev-docs')">Document Status</button>
+    <button class="ev-tab" onclick="showEvTab(this,'ev-claims')">Legal Claims</button>
+  </div>
+
+  <div class="ev-panel active" id="ev-docs">
+    <div class="ev-row"><span class="ev-row-title">Speedy Trial Motion to Dismiss (N.J. Const. Art. I §10)</span><span class="badge b-gold">Ruling Pending</span></div>
+    <div class="ev-row"><span class="ev-row-title">OPIA Complaint — Judge Olivieri</span><span class="badge b-bl">Filed Jan 24, 2026</span></div>
+    <div class="ev-row"><span class="ev-row-title">ACJC Complaint — Judge Olivieri (v4 + supplement)</span><span class="badge b-bl">Filed Mar 21, 2026</span></div>
+    <div class="ev-row"><span class="ev-row-title">Motion for Recusal / Disqualification (EF-4042822)</span><span class="badge b-gold">Pending 32+ Days</span></div>
+    <div class="ev-row"><span class="ev-row-title">Letter Application to Assignment Judge Katz</span><span class="badge b-gr">Ready to File</span></div>
+    <div class="ev-row"><span class="ev-row-title">Opposition to LoFaro's Motion (v8-FINAL)</span><span class="badge b-bl">Returnable Apr 22</span></div>
+    <div class="ev-row"><span class="ev-row-title">Preservation of Objections — April 22, 2026</span><span class="badge b-bl">Filed Apr 15, 2026</span></div>
+    <div class="ev-row"><span class="ev-row-title">Appeal of Records Denial (R. 1:38-10(b))</span><span class="badge b-gold">Pending</span></div>
+    <div class="ev-row"><span class="ev-row-title">Audio records CN 12605 (11 hearing dates)</span><span class="badge b-g">RECEIVED ✓</span></div>
+    <div class="ev-row"><span class="ev-row-title">Case activity log (MACS chronological docket)</span><span class="badge b-r">DENIED — Appeal Pending</span></div>
+    <div class="ev-row"><span class="ev-row-title">Pool deck video (Sept 2, 2024)</span><span class="badge b-g">In Sara's Possession ✓</span></div>
+    <div class="ev-row"><span class="ev-row-title">Audio diarization transcript (Deepgram, Feb 24, 2026)</span><span class="badge b-g">Complete ✓</span></div>
+    <div class="ev-row"><span class="ev-row-title">Police Report 24-29264 (Sara's — same-day, 5:16 PM)</span><span class="badge b-g">Confirmed ✓</span></div>
+    <div class="ev-row"><span class="ev-row-title">Gym contempt video (Feb 26, 2025) + Keyscan records</span><span class="badge b-g">Confirmed ✓</span></div>
+    <div class="ev-row"><span class="ev-row-title">Hearing transcripts: Feb 26, 2025; Jun 4, 2025; Jan 21, 2026; Mar 18, 2026</span><span class="badge b-g">Transcribed + Diarized ✓</span></div>
+    <div class="ev-row"><span class="ev-row-title">Prosecutor's written confirmation of no video (Dec 2, 2025)</span><span class="badge b-g">Confirmed ✓</span></div>
+  </div>
+
+  <div class="ev-panel" id="ev-claims">
+    <div class="claim-cards">
+      <div class="claim-card"><div class="claim-num">Claim I</div><div class="claim-title">First Amendment Retaliation — 42 U.S.C. § 1983</div><div class="claim-body">Protected activities: petitioning Assemblyman Marenco; filing police report (Sept 2, 2024 at 5:16 PM, before Mukamal's complaint); engaging counsel and cease-and-desist letters; filing cross-complaint; petitioning Mayor Turner; filing ACJC/OPIA complaints. Temporal proximity: complaint filed 11 days after Mukamal's own Notice to Cease. State actor nexus: LoFaro confirmed as de facto prosecutor on record [17:44–17:49]. Monell liability: structural service breakdown, scheduling bias, denial of defendant's own court records. <em>Monell v. Dep't of Social Servs.</em>, 436 U.S. 658 (1978).</div></div>
+      <div class="claim-card"><div class="claim-num">Claim II</div><div class="claim-title">Speedy Trial Violation — Sixth Amendment / N.J. Const. Art. I §10</div><div class="claim-body">All four Barker v. Wingo factors satisfied: (1) Length — 550+ days, presumptively prejudicial; (2) Reason — state-attributable; (3) Assertion — formally made January 24, 2026; (4) Prejudice — $40,000+, federal clearance at risk. <em>State v. Szima</em>, 70 N.J. 196 (1976); <em>State v. Cahill</em>, 213 N.J. 253 (2013).</div></div>
+      <div class="claim-card"><div class="claim-num">Claim III</div><div class="claim-title">Due Process &amp; Equal Protection — Fourteenth Amendment</div><div class="claim-body">Due process: court prepared to rule on unserved motion; Sara silenced when she tried to speak; records of her own criminal case denied without legal basis. Equal protection: Sara required to provide hotel confirmation with 25 days advance notice. Mukamal's demonstrably false "out of country" claim accepted with no documentation. Directly comparable record treatment. <em>State v. McCabe</em>, 201 N.J. 34 (2010).</div></div>
+      <div class="claim-card"><div class="claim-num">Claim IV</div><div class="claim-title">Malicious Prosecution — State Law</div><div class="claim-body"><em>Lind v. Schmid</em>, 67 N.J. 255 (1975): (1) criminal action instituted by defendant ✓; (2) actuated by malice ✓ — "next project" email, mediation leverage offer, deliberate relocation to Sara's building; (3) absence of probable cause ✓; (4) favorable termination — pending.</div></div>
+      <div class="claim-card"><div class="claim-num">Claim V</div><div class="claim-title">Abuse of Process — State Law</div><div class="claim-body"><em>Tedards v. Auty</em>, 232 N.J. Super. 541 (App. Div. 1989): (1) ulterior motive ✓ — the February 7, 2025 mediation offer (mutual dismissal to extinguish North Bergen exposure) makes this explicit; (2) perversion of legitimate use of process ✓ — using a criminal complaint as a quid pro quo instrument is not a legitimate use of the criminal justice system.</div></div>
+      <div class="claim-card" style="background:var(--red-lt)"><div class="claim-num" style="color:var(--red)">Stakes</div><div class="claim-title">Federal Security Clearance</div><div class="claim-body">Sara holds a federal security clearance. Even a petty disorderly persons conviction could trigger a clearance review or revocation. <strong>Dismissal on the merits — not a plea — is non-negotiable.</strong></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-headline">Review the case. Reach out to discuss representation or referral.</div>
+  <div class="cta-buttons">
+    <a href="mailto:sr3768@columbia.edu?subject=State v. Ray — Consultation" class="cta-btn primary">Email Sara Ray</a>
+    <a href="tel:7324297793" class="cta-btn secondary">(732) 429-7793</a>
+    <a href="Ray Case File - Print.html" target="_blank" class="cta-btn secondary">Print Version</a>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-l">State v. Ray &amp; Caram &nbsp;·&nbsp; Docket 0911-S-2024-193/194 &nbsp;·&nbsp; Weehawken Municipal Court</div>
+  <div class="foot-r">Sara Ray, Pro Se &nbsp;·&nbsp; sr3768@columbia.edu &nbsp;·&nbsp; (732) 429-7793</div>
+</footer>
+
+
+<script>
+
+// -- TIMELINE DATA (from Ray-Case-Interactive.html) --
+const TL = [
+
+  {date:'Dec 15, 2023', tag:'m', tagLabel:'Municipal', dot:'navy', title:'Sara moves into Unit 1101. Mukamal in adjacent Unit 1103.', detail:'Sara transferred to Unit 1101 at The Duchess. Mukamal occupied Unit 1103, sharing a wall with Sara's master bedroom. The noise harassment begins almost immediately.'},
+
+  {date:'Dec 2023–Jan 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Noise campaign begins. Master bedroom unlivable.', detail:'Mukamal's sound system penetrates the shared wall with force. Closet hangers vibrate and clatter. Sara cannot sleep in the master bedroom once during her entire tenancy at Unit 1101. She reports the noise to management in writing repeatedly. [DUCHESS000080; DUCHESS Interrogatory Resp. pp. 7–8]'},
+
+  {date:'Feb 1, 2024', tag:'m', tagLabel:'Municipal', dot:'', title:'Gutierrez follow-up: situation has not improved.', detail:'Property manager Benedicta Gutierrez emails Sara to ask if the noise situation has improved. Sara confirms it has not.'},
+
+  {date:'Feb 22, 2024', tag:'m', tagLabel:'Municipal', dot:'', title:'Dytyniak escalates to SVP — two months after first complaint.', detail:'Building manager Andrew Dytyniak finally escalates to Yvette Stewart-Glimp (SVP Property Management) — more than two months after Sara's initial complaint. Nothing changes.'},
+
+  {date:'Early–Mid 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Harassment escalates: verbal threats, intimidating letters, spitting.', detail:'Mukamal makes verbal threats of physical harm to Sara and Manuel. Leaves intimidating written letters outside their unit. Spits on grocery deliveries. His own written admission: “I should not have spit at his door. I did not mean to spit on his groceries.” Dytyniak confirms on video: “When reviewing footage we can confirm he did spit on their items.” North Bergen Case 0908-S-2024-269. [DUCHESS000300–301; DUCHESS000315]'},
+
+  {date:'May 2, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal abuses building staff. Calls manager a “bitch” in front of a child.', detail:'Mukamal throws a lease violation letter onto the elevator floor and verbally abuses property manager Benedicta Gutierrez, calling her a “bitch” in front of a child. [DUCHESS000281–292]'},
+
+  {date:'April 2024', tag:'m', tagLabel:'Municipal', dot:'gold', title:'Notice to Cease issued to Mukamal — six months after first complaint.', detail:'Notice to Cease hand-delivered to Mukamal [DUCHESS000184, 000237]. This is the same Notice to Cease Mukamal later submitted as his “evidence” against Sara — he received it for his own conduct.'},
+
+  {date:'Jun 19, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal throws bag at property manager; registers harassment website.', detail:'Throws bag at Gutierrez; records her without consent [DUCHESS000255]. Registers domain “DuchessSucksAndrewandBenedicta” [DUCHESS000252]. Defendants' own attorney advised 3-day NTQ for terroristic threats was available — not pursued [DUCHESS000349].'},
+
+  {date:'Jul 3, 2024', tag:'e', tagLabel:'Key Evidence', dot:'gold', title:'Sara formally notifies building of intent to vacate. Break-lease fees waived.', detail:'Sara sends formal notice citing Mukamal's harassment and management's failure. SVP Yvette Stewart-Glimp responds: “We understand and we are so sorry. We are following the law and unfortunately it is taking time. You will not be charged any break lease fees.”'},
+
+  {date:'Late Jul–Aug 2024', tag:'m', tagLabel:'Municipal', dot:'', title:'Two Notices to Quit issued to Mukamal — after Sara already gave notice.', detail:'Defendants finally issue two Notices to Quit with August 31, 2024 deadline [DUCHESS000220]. Sara had already given notice to vacate.'},
+
+  {date:'Aug 12, 2024', tag:'m', tagLabel:'Municipal', dot:'navy', title:'Sara & Manuel move to Hoboken Point, Unit 701S.', detail:'Sara and Manuel move to 100 Harbor Blvd, Weehawken, NJ. They believe the conflict is over.'},
+
+  {date:'Aug 21–22, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal emails: “another project.”', detail:'“Now, my intention was to just move, and move on to another project once I was out of this garbage environment, but you seem to want to keep pushing me.” — Mukamal to Duchess manager, written while relocating to Sara's new building. [DUCHESS000332]'},
+
+  {date:'Aug 30, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal moves into Sara's new building. Unit 509N.', detail:'Eighteen days after Sara. Per his own sworn statement to Weehawken PD he claims he moved to “avoid further conflict.” Sara is in Unit 701S. [Investigation Report 24-31824A]'},
+
+  {date:'Sept 2, 2024', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Pool deck confrontation. Sara files police report same day at 5:16 PM.', detail:'Mukamal approaches Sara and Manuel on the patio. First words (before Sara records): “I found us and we get to be together again!” Calls Sara a “Karen.” Sara responds with a comment about his age. Sara and Manuel file police report FIRST — 5:16 PM (CAD 24-29264). Officer Echanique documents Mukamal's words; Sara described as “creeped out” and “frightened.”'},
+
+  {date:'Sept 21, 2024', tag:'m', tagLabel:'Municipal', dot:'red', title:'Mukamal files retaliatory criminal complaint. Nineteen days after the incident.', detail:'Mukamal goes to Weehawken PD at 16:01 hours. Eleven days after his own Notice to Cease from Hoboken Point/Greystar. In his account to Officer McCall, he attributes a fabricated quote to Manuel: “I am going to ruin you like we did in the last building.” This statement does not appear on the audio recording.'},
+
+  {date:'Feb 7, 2025', tag:'e', tagLabel:'Key Evidence', dot:'gold', title:'Mediation: Mukamal offers mutual dismissal.', detail:'Mukamal's counsel proposes: drop Weehawken charges against Sara/Manuel in exchange for Sara dropping North Bergen spitting complaint (0908-S-2024-269). Sara refuses. This reveals the complaint's true purpose — leverage to extinguish Mukamal's own criminal exposure.'},
+
+  {date:'Feb 26, 2025', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Mukamal perjures himself. Claims to be “out of country.”', detail:'Mukamal claims to be outside the country. Gym surveillance footage and key fob access records prove he was in the building. Court accepted his verbal claim with no documentation. Sara, by contrast, provided formal adjournment letters with hotel confirmation #17803024 — 25 days in advance.'},
+
+  {date:'Apr 16, 2025', tag:'m', tagLabel:'Municipal', dot:'', title:'Contempt proceeding initiated.', detail:'Contempt proceeding entered on court docket re: Mukamal's perjured Feb 26 statement. Rescheduled to Aug 20, 2025 alongside trial. Continued by court instruction. Judge Olivieri later denied on the record having any recollection of it.'},
+
+  {date:'Apr 18, 2025', tag:'p', tagLabel:'Protected Activity', dot:'green', title:'Sara petitions Mayor Turner.', detail:'Formal written petition to rturner@weehawken-nj.us. Sara requests oversight and inquiry. ~30-minute phone call follows (~Apr 22). Mayor states he agrees case has “dragged on for way too long,” will make inquiries, will speak to the prosecutor.'},
+
+  {date:'~Apr 22, 2025', tag:'e', tagLabel:'Key Evidence', dot:'gold', title:'Mayor Turner: case has “dragged on for way too long.”', detail:'Mayor Turner calls Sara. Sara documents in contemporaneous email to then-counsel Berrent: “He agrees that it has dragged on for way too long but is curious to know where they see this all going.”'},
+
+  {date:'Jun 4, 2025', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Trial date offered by defense rejected; calendar built around LoFaro.', detail:'Mott offered July 24, 25, 28. Judge: “That's fantastic. But I don't have court those days, so that's not happening.” Court built August 20 trial date around LoFaro's Camden County trial + family vacation. Aug 20 trial date silently evaporated — 7-month gap to next hearing.'},
+
+  {date:'Jun 5, 2025', tag:'m', tagLabel:'Municipal', dot:'green', title:'Sara files cross-complaint against Mukamal. 89 days before SOL.', detail:'Filed on court-ordered deadline. 89 days before the September 2, 2025 statute of limitations expiration. Docket 0911-S-2025-000092. Probable cause found November 25, 2025.'},
+
+  {date:'Dec 2, 2025', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Prosecutor confirms in writing: no video exists.', detail:'Phyllis Walsh, Weehawken Prosecutor's Discovery Coordinator: “Our office has not received any video recordings from Brian Mukamal.” The prosecution's chief claimed evidence does not exist. The prosecution continues.'},
+
+  {date:'Jan 21, 2026', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Hearing #14: Remote access denied to Sara; granted to LoFaro & Mukamal. Pro se right disparaged.', detail:'Sara called Jan 20 to request remote appearance — denied. LoFaro and Mukamal appeared virtually. Judge stated: “I would seriously consider hiring an attorney… that's why we go to school for law school for three years.” [Jan 21, 2026 transcript]'},
+
+  {date:'Jan 24, 2026', tag:'m', tagLabel:'Municipal', dot:'gold', title:'Speedy Trial Motion filed. OPIA complaint filed.', detail:'Motion to Dismiss for Speedy Trial Violation filed per N.J. Const. Art. I §10 and State v. Szima, 70 N.J. 196 (1976). OPIA complaint against Judge Olivieri filed same day.'},
+
+  {date:'Mar 2, 2026', tag:'m', tagLabel:'Municipal', dot:'', title:'LoFaro files motion to dismiss Sara's cross-complaint. Never serves Sara.', detail:'LoFaro submits motion to court, asks court to forward. Sara never receives it. Motion cites N.J.S.A. 2C:21-6 (credit card fraud statute) as the applicable limitations provision.'},
+
+  {date:'Mar 18, 2026', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Hearing #15: Unserved motion, silencing, prejudgment — all on the record.', detail:'Judge states she is “ready to go” on a motion Sara has never received. LoFaro: “I think it's clear what the ruling should be.” Judge: “Absolutely.” — after reviewing only LoFaro's papers. Judge refuses to rule on speedy trial motion until trial. Judge: “I mean, it's already been two years. What's another couple months?” Judge confirms LoFaro is prosecuting on the record.'},
+
+  {date:'Mar 21, 2026', tag:'m', tagLabel:'Municipal', dot:'gold', title:'ACJC complaint + supplement filed. Recusal motion filed via JEDS (EF-4042822).', detail:'ACJC complaint + supplement against Judge Olivieri filed. Recusal motion filed via JEDS, returnable April 22, 2026.'},
+
+  {date:'Apr 14–15, 2026', tag:'e', tagLabel:'Key Evidence', dot:'red', title:'Court denies Sara access to her own docket history. Audio records received.', detail:'Court Administrator Figaro denies Sara's MACS case activity log request — “not part of public record.” No legal basis provided. Sara appeals per R. 1:38-10(b). Audio recordings (CN 12605) received separately — in Sara's possession.'},
+
+  {date:'Apr 22, 2026', tag:'m', tagLabel:'Municipal', dot:'navy', title:'Hearing #16. Recusal motion returnable. No trial date ever set.', detail:'Recusal motion pending 32 days without ruling. Speedy trial motion still unruled. Opposition to LoFaro's motion filed. Preservation of Objections filed.'}
+
+];
+
+function buildTimeline() {
+  var container = document.getElementById('tl');
+  if(!container){return;}
+  var html = '';
+  for(var i=0;i<TL.length;i++){
+    var e = TL[i];
+    var tagClass = e.tag==='m'?'tag-m':e.tag==='e'?'tag-e':e.tag==='p'?'tag-p':'tag-m';
+    var dotClass = e.dot ? 'tl-dot '+e.dot : 'tl-dot';
+    html += '<div class="tl-entry">';
+    html += '<div class="tl-date">'+e.date+'</div>';
+    html += '<div class="'+dotClass+'"></div>';
+    html += '<div class="tl-content">';
+    html += '<div class="tl-card" onclick="toggleTL(this)">';
+    html += '<span class="tl-arrow" style="float:right;font-size:12px;color:var(--muted)">+</span>';
+    html += '<span class="tl-tag '+tagClass+'">'+e.tagLabel+'</span>';
+    html += '<div class="tl-title">'+e.title+'</div>';
+    html += '<div class="tl-detail">'+e.detail+'</div>';
+    html += '</div></div></div>';
+  }
+  container.innerHTML = html;
+}
+
+function toggleTL(card) {
+  card.classList.toggle('expanded');
+  card.querySelector('.tl-detail').classList.toggle('show');
+}
+
+
+// Nav scroll
+window.addEventListener('scroll',function(){
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>80);
+});
+// Day counter
+(function(){
+  var d=Math.floor((new Date()-new Date('2024-09-21'))/86400000);
+  var h=document.getElementById('hero-days');if(h)h.textContent=d;
+  var s=document.getElementById('stat-days');if(s)s.textContent=d+'+';
+})();
+// Build timeline
+// timeline is static HTML - no JS render needed
+
+// Smooth scroll
+// Accordion
+function toggleAccord(hdr){
+  hdr.parentElement.classList.toggle('open');
+}
+// Evidence tabs
+function showEvTab(btn,id){
+  document.querySelectorAll('.ev-tab').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.ev-panel').forEach(function(p){p.classList.remove('active')});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+// Transcript jump
+function jumpTo(bodyId,markId){
+  var body=document.getElementById(bodyId);
+  var mark=document.getElementById(markId);
+  if(mark&&body){
+    body.scrollTop=mark.offsetTop-20;
+    mark.style.background='rgba(140,31,26,.4)';
+    setTimeout(function(){mark.style.background=''},2500);
+  }
+}
+</script>
+</body>
+</html>
