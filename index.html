@@ -406,6 +406,24 @@ footer{
 .tl-detail-static{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);font-size:13px;line-height:1.7;color:var(--muted)}
 .tl-card-static.tl-open .tl-detail-static{display:block}
 
+
+/* ?? PRINT ?? */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  #auth-gate { display: none !important; }
+  nav, .nav-links, .cta-btn, .t-jumps, .nav-cta { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+  .s-wrap { border: none !important; page-break-inside: avoid; }
+  .s-wrap.dark { background: #1a1a1a !important; color: #fff !important; }
+  .transcript { background: #111 !important; }
+  .t-line { page-break-inside: avoid; }
+  .accord-body { display: block !important; }
+  .tl-card-static { page-break-inside: avoid; }
+  .person-grid { grid-template-columns: repeat(2,1fr) !important; }
+  footer { display: none; }
+  h2 { page-break-after: avoid; }
+  .callout { page-break-inside: avoid; }
+}
 </style>
 <script>
 function navTo(id){
@@ -1232,7 +1250,7 @@ function navTo(id){
   <div class="cta-buttons">
     <a href="mailto:sr3768@columbia.edu?subject=State v. Ray — Consultation" class="cta-btn primary">Email Sara Ray</a>
     <a href="tel:7324297793" class="cta-btn secondary">(732) 429-7793</a>
-    <a href="Ray Case File - Print.html" target="_blank" class="cta-btn secondary">Print Version</a>
+    <button onclick="window.print()" class="cta-btn secondary" style="cursor:pointer;font-family:inherit">Print / Save PDF</button>
   </div>
 </div>
 
