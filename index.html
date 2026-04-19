@@ -286,7 +286,7 @@ tr:nth-child(even) td{background:rgba(0,0,0,.02)}
 .t-jumps{padding:10px 20px;background:#1A1814;border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:8px;flex-wrap:wrap}
 .t-jump{background:#272420;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:5px 12px;font-size:11px;font-family:var(--mono);cursor:pointer;border-radius:2px;transition:.15s}
 .t-jump:hover{background:rgba(140,31,26,.3);color:#E09090;border-color:rgba(140,31,26,.4)}
-.t-body{padding:16px 20px;overflow-y:auto;max-height:480px;font-family:var(--mono);font-size:12px;line-height:2}
+.t-body{padding:16px 20px;font-family:var(--mono);font-size:12px;line-height:2}
 .t-body::-webkit-scrollbar{width:4px}.t-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
 .t-line{padding:1px 0}.t-ts{color:#3A4040;font-size:10px;margin-right:10px}
 .spk-j{color:#5B9BD5}.spk-s{color:#60C878}.spk-l{color:#D4A840}.spk-m{color:#C090D0}.spk-o{color:#7090A8}
@@ -1118,7 +1118,7 @@ function navTo(id){
 
   <!-- T2: January 21 2026 -->
   <h2 style="margin-top:56px">January 21, 2026 &mdash; Hearing #14 <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:1px solid var(--rule);padding-bottom:1px;margin-left:16px" onclick="navTo('s-timeline')">&larr; Timeline</span></h2>
-  <div class="callout red"><div class="callout-lbl">Key Moments</div>Remote access denied to Sara; LoFaro &amp; Mukamal appear virtually &nbsp;&middot;&nbsp; Prosecutor Reisman coaches LoFaro on the record &nbsp;&middot;&nbsp; Pro se right disparaged [06:52] &nbsp;&middot;&nbsp; Sara asserts speedy trial [07:57]</div>
+  <div class="callout red"><div class="callout-lbl">Key Moments</div>Prosecutor Reisman coaches LoFaro on expungement access [01:51] &mdash; RPC 3.5(b) &nbsp;&middot;&nbsp; Pro se right disparaged [06:52] &nbsp;&middot;&nbsp; Sara asserts speedy trial [07:57] &nbsp;&middot;&nbsp; Remote access denied to Sara while LoFaro &amp; Mukamal appear virtually</div>
   <div class="transcript">
     <div class="t-top">
       <div class="t-top-title">January 21, 2026 &mdash; Weehawken Municipal Court &middot; Hearing #14</div>
@@ -1130,6 +1130,7 @@ function navTo(id){
       </div>
     </div>
     <div class="t-jumps">
+      <button class="t-jump" onclick="jumpTo('tb121','km121c')">Prosecutor Coaches LoFaro [01:51]</button>
       <button class="t-jump" onclick="jumpTo('tb121','km121a')">Pro Se Disparagement [06:52]</button>
       <button class="t-jump" onclick="jumpTo('tb121','km121b')">Sara Asserts Speedy Trial [07:57]</button>
     </div>
@@ -1140,7 +1141,7 @@ function navTo(id){
 <div class="t-line"><span class="t-ts">[00:57]</span><span class="spk-o">PROSECUTOR REISMAN: Yes, as far as Mr. Lofaro is concerned. He's going to write to Ms. Walsh. She has the correct information now to request discovery and told me he'll do that forthwith.</span></div>
 <div class="t-line"><span class="t-ts">[01:08]</span><span class="spk-j">JUDGE OLIVIERI: Okay. Number two is there's going to be a motion filed to dismiss based upon an incident that occurred in North Bergen. Is that correct, Mr. Lofaro?</span></div>
 <div class="t-line"><span class="t-ts">[01:21]</span><span class="spk-l">CARMINE LOFARO: Your Honor, our plan is once we receive discovery. We're hoping that there's information that will be the basis for a motion to dismiss. The North Bergen matter &mdash; my client was dismissed months ago by Judge Coviella with prejudice.</span></div>
-<div class="t-line hl"><span class="t-ts">[01:51]</span><span class="spk-o">PROSECUTOR REISMAN [coaching LoFaro on record]: The way to break it is I think you have to file a motion to unseal the record temporarily in the superior court, and then they'll sign an order telling the court to open up the expunged file, make copies of everything, give it to you, and re-seal it. To avoid further delay, sir, file that motion in the superior court to unseal the expunged trial, and the superior court judge will sign the order, send it to the court, then they'll open it and give you copies of everything, and then reseal it.</span></div>
+<div class="t-line hl" id="km121c"><span class="t-ts">[01:51]</span><span class="spk-o">PROSECUTOR REISMAN [coaching LoFaro on record ? RPC 3.5(b) violation]: The way to break it is I think you have to file a motion to unseal the record temporarily in the superior court, and then they'll sign an order telling the court to open up the expunged file, make copies of everything, give it to you, and re-seal it. To avoid further delay, sir, file that motion in the superior court to unseal the expunged trial, and the superior court judge will sign the order, send it to the court, then they'll open it and give you copies of everything, and then reseal it.</span></div>
 <div class="t-line hl"><span class="t-ts">[note]</span><span style="color:#E07070;font-style:italic">Judge Olivieri did not interrupt or limit Reisman's on-record coaching of LoFaro on how to obtain Sara's expunged records.</span></div>
 <div class="t-line"><span class="t-ts">[02:56]</span><span class="spk-j">JUDGE OLIVIERI: I just am still confused about how an incident in North Bergen could have anything to do with something that happened in Weehawken.</span></div>
 <div class="t-line"><span class="t-ts">[04:00]</span><span class="spk-l">CARMINE LOFARO: I know these cases are old, we put it over about 60 days. I'm not trying to stall, your honor. I'm just trying to defend my client.</span></div>
@@ -1384,16 +1385,13 @@ function showEvTab(btn,id){
 }
 // Transcript jump
 function jumpTo(bodyId,markId){
-  var body=document.getElementById(bodyId);
   var mark=document.getElementById(markId);
-  if(!mark||!body) return;
-  var markRect=mark.getBoundingClientRect();
-  var bodyRect=body.getBoundingClientRect();
-  body.scrollTop=body.scrollTop+(markRect.top-bodyRect.top)-40;
+  if(!mark) return;
+  mark.scrollIntoView({behavior:'smooth',block:'center'});
   mark.style.background='rgba(180,60,40,.55)';
   mark.style.outline='2px solid rgba(220,100,60,.9)';
-  mark.style.transition='background 0.3s,outline 0.3s';
-  setTimeout(function(){mark.style.background='';mark.style.outline='';},3000);
+  mark.style.transition='background 0.5s,outline 0.5s';
+  setTimeout(function(){mark.style.background='';mark.style.outline='';},3500);
 }
 </script>
 <script>
